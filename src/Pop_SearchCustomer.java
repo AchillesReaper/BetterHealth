@@ -4,17 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 
-
-public class Pop_AddCustomer extends JFrame implements ActionListener {
-
+public class Pop_SearchCustomer extends JFrame implements ActionListener {
     public JTextField firstNameTF, lastNameTF, mediCareTF, mobileTF, emailTF, addressTF;
     public JComboBox genderCB, DOBDayCB, DOBMonthCB, DOBYearCB;
     public String gender, DOBDay, DOBMonth, DOBYear;
-    public JButton addToDB;
+    public JButton searchCstmBtn;
 
-
-
-    public Pop_AddCustomer(){
+    public Pop_SearchCustomer(){
         JLabel firstNameLabel = new JLabel("First Name:");
         JLabel lastNameLabel = new JLabel("Last Name:");
         JLabel mediCareLabel = new JLabel("Medi-Care:");
@@ -61,8 +57,8 @@ public class Pop_AddCustomer extends JFrame implements ActionListener {
         emailTF = new JTextField(10);
         addressTF = new JTextField(10);
 
-        addToDB = new JButton("Add New Customer");
-        addToDB.addActionListener(this);
+        searchCstmBtn = new JButton("Search");
+        searchCstmBtn.addActionListener(this);
 
         firstNameLabel.setBounds(10,10,100,40);
         lastNameLabel.setBounds(10,60,100,40);
@@ -82,10 +78,10 @@ public class Pop_AddCustomer extends JFrame implements ActionListener {
         emailTF.setBounds(120,310,260,40);
         addressTF.setBounds(120,360,260,40);
 
-        addToDB.setBounds(125,420,150,30);
+        searchCstmBtn.setBounds(125,420,150,30);
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setTitle("Add New Customer");
+        setTitle("Search Customer");
         setSize(400,500);
         setResizable(false);
         setLayout(null);
@@ -105,15 +101,12 @@ public class Pop_AddCustomer extends JFrame implements ActionListener {
         add(emailTF);
         add(addressLabel);
         add(addressTF);
-        add(addToDB);
+        add(searchCstmBtn);
 
         setVisible(true);
     }
 
-    public void dataValidation(){
-        boolean validation = true;
-        if (mediCareTF.getText().length())
-    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == genderCB){
@@ -128,18 +121,12 @@ public class Pop_AddCustomer extends JFrame implements ActionListener {
         if(e.getSource() == DOBYearCB){
             DOBYear = (String) DOBYearCB.getSelectedItem();
         }
-        if(e.getSource() == addToDB){
+        if(e.getSource() == searchCstmBtn){
             String DOB = DOBDay + "/" + DOBMonth + "/" + DOBYear;
-            DB_CRUD.addCstmToDB(firstNameTF.getText(), lastNameTF.getText(),
-                    mediCareTF.getText(),mobileTF.getText(),gender,DOB,
-                    emailTF.getText(), addressTF.getText());
-
-
-
-
+//            DB_CRUD.addCstmToDB(firstNameTF.getText(), lastNameTF.getText(),
+//                    mediCareTF.getText(),mobileTF.getText(),gender,DOB,
+//                    emailTF.getText(), addressTF.getText());
             this.dispose();
         }
-
     }
-
 }
