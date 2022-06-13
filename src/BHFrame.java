@@ -1,23 +1,21 @@
-import pop_up_window.AddCustomer;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
 public class BHFrame extends JFrame implements ActionListener {
     public JPanel btnLayer1Panel, btnLayer2Panel, contentPanel;
     public JButton transactionBtn, serviceBtn, customerBtn, backupBtn;
-
     //layer2 transaction btn
     public JButton newTransactionBtn, allTransactionBtn, searchTransactionBtn;
-
     //layer2 service btn
     public JButton extServiceBtn, addServiceBtn, rmServiceBtn;
 
     //layer2 customer btn
     public JButton newCustomerBtn, allCustomerBtn, searchCustomerBtn;
-
+    public JTable contentTable;
+    public JScrollPane scrollPan;
 
     BHFrame(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -127,7 +125,7 @@ public class BHFrame extends JFrame implements ActionListener {
             setVisible(true);
         }
 
-        if (e.getSource() == customerBtn){
+         if (e.getSource() == customerBtn){
             if (btnLayer2Panel != null){remove(btnLayer2Panel);}
             btnLayer2Panel = new JPanel();
             btnLayer2Panel.setBounds(10,70,740,56);
@@ -158,7 +156,24 @@ public class BHFrame extends JFrame implements ActionListener {
         }
 
         if(e.getSource() == newCustomerBtn){
-            new AddCustomer();
+            new Pop_AddCustomer();
+        }
+
+        if(e.getSource() == allCustomerBtn){
+            String[] colName = {"First Name", "Last Name", "Medi-Care","Mobile","Gender","DOB","email","Address"};
+            Object[][] data = DB_CRUD.showAllCstm();
+            contentTable = new JTable(data,colName);
+            scrollPan = new JScrollPane(contentTable);
+            contentTable.setFillsViewportHeight(true);
+            contentPanel = new JPanel();
+            contentPanel.add(contentTable);
+            contentPanel.setBounds(10,130,740,300);
+            add(contentPanel);
+            setVisible(true);
+
+
         }
     }
+
+
 }
