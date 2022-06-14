@@ -8,14 +8,12 @@ public class BHFrame extends JFrame implements ActionListener {
     public JPanel btnLayer1Panel = new JPanel();
     public JPanel btnLayer2Panel = new JPanel();
     public JPanel contentPanel= new JPanel();
-    public JButton transactionBtn, serviceBtn, customerBtn, backupBtn;
-    //layer2 transaction btn
-    public JButton newTransactionBtn, allTransactionBtn, searchTransactionBtn, exportCSVBtn;
-    //layer2 service btn
-    public JButton extServiceBtn, addServiceBtn, rmServiceBtn;
+    public JButton transactionBtn, newTransactionBtn, allTransactionBtn, searchTransactionBtn,
+            serviceBtn, extServiceBtn, addServiceBtn, rmServiceBtn,
+            customerBtn, newCustomerBtn, allCustomerBtn, searchCustomerBtn, addCardBtn,
+            backupBtn;
+    public JButton exportCSVBtn;
 
-    //layer2 customer btn
-    public JButton newCustomerBtn, allCustomerBtn, searchCustomerBtn;
     public JTable contentTable;
     public JScrollPane scrollPan;
 

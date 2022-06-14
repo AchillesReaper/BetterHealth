@@ -112,7 +112,9 @@ public class Pop_AddCustomer extends JFrame implements ActionListener {
 
     public void dataValidation(){
         boolean validation = true;
-        if (mediCareTF.getText().length())
+        if (mediCareTF.getText() == null){
+            validation = false;
+        }
     }
     @Override
     public void actionPerformed(ActionEvent e) {
