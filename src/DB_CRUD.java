@@ -37,13 +37,12 @@ public class DB_CRUD {
     public static Object[][] showAllCstm(){
         try{
             Connection connection = DriverManager.getConnection(URL,USER,PASSWORD);
-            Statement stmt = connection.createStatement();
+            Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             String queryString = "select * from customer";
             ResultSet rs = stmt.executeQuery(queryString);
-            int row_num = 0;
-            while (rs.next()) {
-                row_num++;
-            }
+            rs.last();
+            int row_num = rs.getRow();
+            rs.beforeFirst();
             Object[][] data = new Object[row_num][8];
             int count = 0;
             while (rs.next()){
@@ -55,17 +54,7 @@ public class DB_CRUD {
                 data[count][5] = rs.getString("DOB");
                 data[count][6] = rs.getString("email");
                 data[count][7] = rs.getString("address");
-                System.out.println(data[count][0]);
-                System.out.println(data[count][1]);
-                System.out.println(data[count][2]);
-                System.out.println(data[count][3]);
-                System.out.println(data[count][4]);
-                System.out.println(data[count][5]);
-                System.out.println(data[count][6]);
-                System.out.println(data[count][7]);
-
                 count ++;
-                System.out.println(count);
             }
 
             rs.close();
@@ -79,5 +68,34 @@ public class DB_CRUD {
         }
     }
 
-
+//    public static Object[][] searchCstm(String firstName, String lastName, String mediCare, String mobile,
+//                                        String gender, String DOB, String email, String address){
+//        try{
+//            Connection connection = DriverManager.getConnection(URL,USER,PASSWORD);
+//            Statement stmt = connection.createStatement();
+//            String queryString = "select * from customer";
+//            if (firstName != null){
+//                queryString += " where firstName = '%" + firstName + "%'";
+//            }
+//            if (lastName != null){
+//                queryString += " where firstName = '%" + lastName + "%'";
+//            }
+//            if (firstName != null){
+//                queryString += " where firstName = '%" + firstName + "%'";
+//            }
+//            if (firstName != null){
+//                queryString += " where firstName = '%" + firstName + "%'";
+//            }
+//            if (firstName != null){
+//                queryString += " where firstName = '%" + firstName + "%'";
+//            }
+//            if (firstName != null){
+//                queryString += " where firstName = '%" + firstName + "%'";
+//            }
+//            if (firstName != null){
+//                queryString += " where firstName = '%" + firstName + "%'";
+//            }
+//
+//        }
+//    }
 }
