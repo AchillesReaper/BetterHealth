@@ -6,15 +6,9 @@ import java.awt.event.ActionListener;
 
 public class BHFrame extends JFrame implements ActionListener {
     public JPanel menuBtnPanel = new JPanel();
-    public JPanel controlPanel = new JPanel();
-    public JPanel contentPanel= new JPanel();
-    public JButton transactionBtn, newTransactionBtn, allTransactionBtn, searchTransactionBtn,
-            serviceBtn, extServiceBtn, addServiceBtn, rmServiceBtn,
-            customerBtn, newCustomerBtn, allCustomerBtn, searchCustomerBtn, addCardBtn,
-            backupBtn;
-    public JButton exportCSVBtn;
-    public JTable contentTable;
-    public JScrollPane scrollPan;
+    public JPanel sectionPanel = new JPanel();
+    public JButton transactionBtn, serviceBtn, customerBtn, backupBtn;
+
 
     BHFrame(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,10 +16,10 @@ public class BHFrame extends JFrame implements ActionListener {
         setTitle("Better Health Therapy Massage Centre");
         setSize(1100, 720);
 
-        // layer1 panel setting
+        // menu panel setting
         menuBtnPanel.setBounds(10,10,1080,56);
         menuBtnPanel.setLayout(new FlowLayout(FlowLayout.LEFT,20,10));
-        menuBtnPanel.setBackground(Color.darkGray);
+        menuBtnPanel.setBackground(Color.lightGray);
 
         transactionBtn = new JButton("Transaction");
         serviceBtn = new JButton("Service");
@@ -51,16 +45,7 @@ public class BHFrame extends JFrame implements ActionListener {
         menuBtnPanel.add(customerBtn);
         menuBtnPanel.add(backupBtn);
 
-        //control panel format
-        controlPanel.setBounds(750,70,340,600);
-        controlPanel.setBackground(Color.darkGray);
-        //Content panel format
-        contentPanel.setBounds(10,70,730,600);
-        contentPanel.setBackground(Color.darkGray);
-
         add(menuBtnPanel);
-        add(controlPanel);
-        add(contentPanel);
 
         setVisible(true);
     }
@@ -69,38 +54,21 @@ public class BHFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         // show layer 2 buttons
         if (e.getSource() == transactionBtn){
-            if (controlPanel != null){remove(controlPanel);}
-            controlPanel = new JPanel();
 
-
-            add(controlPanel);
             setVisible(true);
         }
 
         if (e.getSource() == serviceBtn){
-            if (controlPanel != null){remove(controlPanel);}
-            controlPanel = new JPanel();
 
-
-
-
-            add(controlPanel);
             setVisible(true);
         }
 
         if (e.getSource() == customerBtn){
-            if (controlPanel != null){remove(controlPanel);}
-            if (contentPanel != null){remove(contentPanel);}
-            controlPanel = new CustomerControl();
-            contentPanel = new ContentAllCstm();
+            if (sectionPanel != null){remove(sectionPanel);}
+            sectionPanel = new CustomerControl();
 
-            add(controlPanel);
-            add(contentPanel);
+            add(sectionPanel);
             setVisible(true);
-        }
-
-        if (e.getSource() == controlPanel.addNewBtn){
-            System.out.println("it works");
         }
 
     }
