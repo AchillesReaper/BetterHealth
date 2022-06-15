@@ -63,4 +63,30 @@ public class DB_CRUD {
             throw new RuntimeException(e);
         }
     }
+
+    public static Object[][] searchCard(String queryString){
+        try{
+            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ResultSet rs = stmt.executeQuery(queryString);
+            rs.last();
+            int row_num = rs.getRow();
+            rs.beforeFirst();
+            Object[][] data = new Object[row_num][4];
+            int count = 0;
+            while (rs.next()){
+                data[count][0] = rs.getString("customerID");
+                data[count][1] = rs.getString("cardID");
+                data[count][2] = rs.getString("issuer");
+                data[count][3] = rs.getString("holder");
+                count ++;
+            }
+            rs.close();
+            stmt.close();
+            connection.close();
+            return data;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

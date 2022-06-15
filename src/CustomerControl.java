@@ -2,6 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -11,7 +17,7 @@ public class CustomerControl extends JPanel implements ActionListener {
     public JTextField customerIdTF, firstNameTF, lastNameTF, mobileTF, emailTF, addressTF;
     public JComboBox genderCB, DOBDayCB, DOBMonthCB, DOBYearCB;
     public String gender, DOBDay, DOBMonth, DOBYear, queryString;
-    public JButton addNewBtn, searchBtn, clearForm, deleteBtn, addCardBtn;
+    public JButton addNewBtn, searchBtn, clearFormBtn, deleteBtn, addTransactionBtn, addCardBtn, exportCsvBtn;
     public JTable cstmTable;
     public JScrollPane scrollPan;
 
@@ -62,7 +68,9 @@ public class CustomerControl extends JPanel implements ActionListener {
                 setVisible(true);
             }
         }
+
     }
+
     public void constructControlPanel(){
         PnlControl.setBounds(730,0,350,600);
         PnlControl.setLayout(null);
@@ -80,26 +88,29 @@ public class CustomerControl extends JPanel implements ActionListener {
 
         customerIdTF = new JTextField(6);
         customerIdTF.setEditable(false);
-        firstNameTF = new JTextField(6);
-        lastNameTF = new JTextField(6);
-        mobileTF = new JTextField(6);
-        emailTF = new JTextField(6);
-        addressTF = new JTextField(6);
+        firstNameTF = new JTextField("",6);
+        lastNameTF = new JTextField("",6);
+        mobileTF = new JTextField("",6);
+        emailTF = new JTextField("",6);
+        addressTF = new JTextField("",6);
 
-        String[] genArr = {"Female","Male","NS"};
+        String[] genArr = {"","Male","Female","Not Specified"};
         genderCB = new JComboBox(genArr);
         genderCB.addActionListener(this);
 
-        String[] dayCB = new String[31];
-        String[] monthCB = new String[12];
-        String[] yearCB = new String[100];
-        for (int i = 0; i < 31; i++){
-            dayCB[i] = Integer.toString(i + 1);
+        String[] dayCB = new String[32];
+        String[] monthCB = new String[13];
+        String[] yearCB = new String[101];
+        dayCB[0] = "";
+        monthCB[0] = "";
+        yearCB[0] = "";
+        for (int i = 1; i < 32; i++){
+            dayCB[i] = Integer.toString(i);
         }
-        for (int i = 0; i < 12; i++){
-            monthCB[i] = Integer.toString(i + 1);
+        for (int i = 1; i < 13; i++){
+            monthCB[i] = Integer.toString(i);
         }
-        for (int i = 0; i < 100; i++) {
+        for (int i = 1; i < 101; i++) {
             yearCB[i] = Integer.toString(Calendar.getInstance().get(Calendar.YEAR) - i);
         }
         DOBDayCB = new JComboBox(dayCB);
@@ -118,12 +129,37 @@ public class CustomerControl extends JPanel implements ActionListener {
 
         addNewBtn = new JButton("Add New Customer");
         searchBtn = new JButton("Search");
-        clearForm = new JButton("Clear");
+        clearFormBtn = new JButton("Clear");
         deleteBtn = new JButton("Delete Customer");
+        addTransactionBtn = new JButton("New Transaction");
+        addCardBtn = new JButton("Add Card");
         addNewBtn.addActionListener(this);
         searchBtn.addActionListener(this);
-        clearForm.addActionListener(this);
+        clearFormBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                customerIdTF.setText("");
+                firstNameTF.setText("");
+                lastNameTF.setText("");
+                mobileTF.setText("");
+                emailTF.setText("");
+                addressTF.setText("");
+                genderCB.setSelectedIndex(0);
+                DOBYearCB.setSelectedIndex(0);
+                DOBMonthCB.setSelectedIndex(0);
+                DOBDayCB.setSelectedIndex(0);
+            }
+        });
         deleteBtn.addActionListener(this);
+        addTransactionBtn.addActionListener(this);
+        addCardBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (customerIdTF.getText().length()>0){
+                    new Pop_Card(customerIdTF.getText(), firstNameTF.getText(), lastNameTF.getText());
+                }
+            }
+        });
 
         //setting constrains for the elements
         cstmIDLabel.setBounds(10,0,90,30);
@@ -146,8 +182,10 @@ public class CustomerControl extends JPanel implements ActionListener {
 
         addNewBtn.setBounds(10,350,160,36);
         searchBtn.setBounds(10,400,160,36);
-        clearForm.setBounds(10,450,160,36);
+        clearFormBtn.setBounds(10,450,160,36);
         deleteBtn.setBounds(10,500,160,36);
+        addTransactionBtn.setBounds(180,350,160,36);
+        addCardBtn.setBounds(180,400,160,36);
 
         //add all element to the control panel
         PnlControl.add(cstmIDLabel);
@@ -168,8 +206,11 @@ public class CustomerControl extends JPanel implements ActionListener {
         PnlControl.add(addressTF);
         PnlControl.add(addNewBtn);
         PnlControl.add(searchBtn);
-        PnlControl.add(clearForm);
+        PnlControl.add(clearFormBtn);
         PnlControl.add(deleteBtn);
+        PnlControl.add(addTransactionBtn);
+        PnlControl.add(addCardBtn);
+
     }
 
     public void constructContent(String queryString){
@@ -179,8 +220,10 @@ public class CustomerControl extends JPanel implements ActionListener {
         PnlContent.setLayout(null);
         PnlContent.setBackground(Color.lightGray);
 
-        JLabel contentTitle = new JLabel("Customer");
-        contentTitle.setBounds(10,0,200,30);
+        JLabel contentTitle = new JLabel("Customer Information");
+        contentTitle.setBounds(10,10,200,30);
+        exportCsvBtn = new JButton("Export CSV");
+        exportCsvBtn.setBounds(595,10,120,30);
 
         Object[][] data = DB_CRUD.searchCstm(queryString);
         if (data.length == 0){
@@ -190,16 +233,67 @@ public class CustomerControl extends JPanel implements ActionListener {
         cstmTable = new JTable(data, colName);
         cstmTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
         cstmTable.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        cstmTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                int row = cstmTable.getSelectedRow();
+                customerIdTF.setText((cstmTable.getModel().getValueAt(row,0)).toString());
+                firstNameTF.setText((cstmTable.getModel().getValueAt(row,1)).toString());
+                lastNameTF.setText((cstmTable.getModel().getValueAt(row,2)).toString());
+                mobileTF.setText((cstmTable.getModel().getValueAt(row,3)).toString());
+                emailTF.setText((cstmTable.getModel().getValueAt(row,4)).toString());
+                genderCB.setSelectedIndex(0);
+                DOBYearCB.setSelectedIndex(0);
+                DOBMonthCB.setSelectedIndex(0);
+                DOBDayCB.setSelectedIndex(0);
+            }
+        });
+
+        exportCsvBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Choose Save Destination");
+                int userSelection  = fileChooser.showSaveDialog(exportCsvBtn);
+                if (userSelection == JFileChooser.APPROVE_OPTION){
+                    File fileToSave = fileChooser.getSelectedFile();
+                    try{
+                        FileWriter fileWriter = new FileWriter(fileToSave);
+                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                        bufferedWriter.write("customerID,firstName,lastName,mobile,email,address,gender,DOB_Y,DOB_M,DOB_D");
+                        bufferedWriter.newLine();
+                        for (int i = 0; i < data.length; i++){
+                            for (int j = 0; j < 10; j++){
+                                if(j != 9){
+                                    bufferedWriter.write(data[i][j] + ",");
+                                }else{
+                                    bufferedWriter.write(data[i][j] + "");
+                                }
+                            }
+                            bufferedWriter.newLine();
+                        }
+                        JOptionPane.showMessageDialog(exportCsvBtn, "SUCCESSFULLY SAVED","INFORMATION",JOptionPane.INFORMATION_MESSAGE);
+                        bufferedWriter.close();
+                        fileWriter.close();
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(exportCsvBtn, "ERROR","ERROR MESSAGE",JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
 
         scrollPan = new JScrollPane(cstmTable);
         scrollPan.setBounds(10,40,700,500);
         cstmTable.setFillsViewportHeight(true);
 
         PnlContent.add(contentTitle);
+        PnlContent.add(exportCsvBtn);
         PnlContent.add(scrollPan);
     }
 
     public Boolean inputValidation(){
+        //validation can be increase upon request
         if (firstNameTF.getText().length() < 2 ||
         lastNameTF.getText().length() < 2 ||
         mobileTF.getText().length() != 10){
@@ -213,10 +307,26 @@ public class CustomerControl extends JPanel implements ActionListener {
             targetCustomer.setMobile(mobileTF.getText());
             targetCustomer.setEmail(emailTF.getText());
             targetCustomer.setAddress(addressTF.getText());
-            targetCustomer.setGender(gender);
-            targetCustomer.setDOB_Y(DOBYear);
-            targetCustomer.setDOB_M(DOBMonth);
-            targetCustomer.setDOB_D(DOBDay);
+            if (gender == null){
+                targetCustomer.setGender("");
+            }else{
+                targetCustomer.setGender(gender);
+            }
+            if(DOBYear == null){
+                targetCustomer.setDOB_Y("");
+            }else{
+                targetCustomer.setDOB_Y(DOBYear);
+            }
+            if(DOBMonth == null){
+                targetCustomer.setDOB_M("");
+            }else{
+                targetCustomer.setDOB_M(DOBMonth);
+            }
+            if(DOBDay == null){
+                targetCustomer.setDOB_D("");
+            }else{
+                targetCustomer.setDOB_D(DOBDay);
+            }
             System.out.println("target created");
             return true;
         }
