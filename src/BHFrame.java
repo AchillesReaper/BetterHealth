@@ -5,18 +5,50 @@ import java.awt.event.ActionListener;
 
 
 public class BHFrame extends JFrame implements ActionListener {
-    public JPanel menuBtnPanel = new JPanel();
-    public JPanel sectionPanel = new JPanel();
+    public JPanel menuBtnPanel;
+    public JPanel sectionPanel;
     public JButton transactionBtn, serviceBtn, customerBtn, backupBtn;
 
 
-    BHFrame(){
+    BHFrame(JPanel sectionInsert){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
         setTitle("Better Health Therapy Massage Centre");
-        setSize(1100, 720);
+        setSize(1100, 660);
 
-        // menu panel setting
+        constructMenuPanel();
+        sectionPanel = sectionInsert;
+
+        add(menuBtnPanel);
+        add(sectionPanel);
+
+        setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // show layer 2 buttons
+        if (e.getSource() == transactionBtn){
+
+            setVisible(true);
+        }
+
+        if (e.getSource() == serviceBtn){
+
+            setVisible(true);
+        }
+
+        if (e.getSource() == customerBtn){
+            sectionPanel = new SectionCustomer();
+            new NewMain(sectionPanel);
+            this.dispose();
+
+        }
+
+    }
+
+    public void constructMenuPanel(){
+        menuBtnPanel = new JPanel();
         menuBtnPanel.setBounds(10,10,1080,56);
         menuBtnPanel.setLayout(new FlowLayout(FlowLayout.LEFT,20,10));
         menuBtnPanel.setBackground(Color.lightGray);
@@ -41,36 +73,9 @@ public class BHFrame extends JFrame implements ActionListener {
         backupBtn.addActionListener(this);
 
         menuBtnPanel.add(transactionBtn);
-//        menuBtnPanel.add(serviceBtn);
+        menuBtnPanel.add(serviceBtn);
         menuBtnPanel.add(customerBtn);
         menuBtnPanel.add(backupBtn);
-
-        add(menuBtnPanel);
-
-        setVisible(true);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // show layer 2 buttons
-        if (e.getSource() == transactionBtn){
-
-            setVisible(true);
-        }
-
-        if (e.getSource() == serviceBtn){
-
-            setVisible(true);
-        }
-
-        if (e.getSource() == customerBtn){
-            if (sectionPanel != null){remove(sectionPanel);}
-            sectionPanel = new CustomerControl();
-
-            add(sectionPanel);
-            setVisible(true);
-        }
-
     }
 
 

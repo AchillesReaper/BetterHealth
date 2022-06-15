@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class CustomerControl extends JPanel implements ActionListener {
+public class SectionCustomer extends JPanel implements ActionListener {
     public JPanel PnlControl = new JPanel();
     public JPanel PnlContent;
     public JTextField customerIdTF, firstNameTF, lastNameTF, mobileTF, emailTF, addressTF;
@@ -23,7 +23,7 @@ public class CustomerControl extends JPanel implements ActionListener {
 
     public Customer targetCustomer;
 
-    public CustomerControl(){
+    public SectionCustomer(){
         setBounds(10,70,1080,700);
         setLayout(null);
 
@@ -72,7 +72,7 @@ public class CustomerControl extends JPanel implements ActionListener {
     }
 
     public void constructControlPanel(){
-        PnlControl.setBounds(730,0,350,600);
+        PnlControl.setBounds(730,0,350,550);
         PnlControl.setLayout(null);
         PnlControl.setBackground(Color.lightGray);
 
@@ -128,11 +128,11 @@ public class CustomerControl extends JPanel implements ActionListener {
         DOBPanel.add(DOBYearCB);
 
         addNewBtn = new JButton("Add New Customer");
-        searchBtn = new JButton("Search");
-        clearFormBtn = new JButton("Clear");
+        searchBtn = new JButton("Search Customer");
+        clearFormBtn = new JButton("Clear Form");
         deleteBtn = new JButton("Delete Customer");
         addTransactionBtn = new JButton("New Transaction");
-        addCardBtn = new JButton("Add Card");
+        addCardBtn = new JButton("Add Medi Card");
         addNewBtn.addActionListener(this);
         searchBtn.addActionListener(this);
         clearFormBtn.addActionListener(new ActionListener() {
@@ -157,28 +157,30 @@ public class CustomerControl extends JPanel implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 if (customerIdTF.getText().length()>0){
                     new Pop_Card(customerIdTF.getText(), firstNameTF.getText(), lastNameTF.getText());
+                }else{
+                    JOptionPane.showMessageDialog(null,"Please select a customer","Reminder",JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
 
         //setting constrains for the elements
-        cstmIDLabel.setBounds(10,0,90,30);
-        firstNameLabel.setBounds(10,40,90,30);
-        lastNameLabel.setBounds(10,80,90,30);
-        mobileLabel.setBounds(10,120,90,30);
-        emailLabel.setBounds(10,160,90,30);
-        addressLabel.setBounds(10,200,90,30);
-        genderLabel.setBounds(10,240,90,30);
-        DOBLabel.setBounds(10,280,90,30);
+        cstmIDLabel.setBounds(10,10,90,30);
+        firstNameLabel.setBounds(10,50,90,30);
+        lastNameLabel.setBounds(10,90,90,30);
+        mobileLabel.setBounds(10,130,90,30);
+        emailLabel.setBounds(10,170,90,30);
+        addressLabel.setBounds(10,210,90,30);
+        genderLabel.setBounds(10,250,90,30);
+        DOBLabel.setBounds(10,290,90,30);
 
-        customerIdTF.setBounds(100,0,240,30);
-        firstNameTF.setBounds(100,40,240,30);
-        lastNameTF.setBounds(100,80,240,30);
-        mobileTF.setBounds(100,120,240,30);
-        emailTF.setBounds(100,160,240,30);
-        addressTF.setBounds(100,200,240,30);
-        genderCB.setBounds(100,240,240,30);
-        DOBPanel.setBounds(100,280,240,30);
+        customerIdTF.setBounds(100,10,240,30);
+        firstNameTF.setBounds(100,50,240,30);
+        lastNameTF.setBounds(100,90,240,30);
+        mobileTF.setBounds(100,130,240,30);
+        emailTF.setBounds(100,170,240,30);
+        addressTF.setBounds(100,210,240,30);
+        genderCB.setBounds(100,250,240,30);
+        DOBPanel.setBounds(100,290,240,30);
 
         addNewBtn.setBounds(10,350,160,36);
         searchBtn.setBounds(10,400,160,36);
@@ -216,7 +218,7 @@ public class CustomerControl extends JPanel implements ActionListener {
     public void constructContent(String queryString){
         if(PnlContent != null){remove(PnlContent);}
         PnlContent = new JPanel();
-        PnlContent.setBounds(0,0,720,600);
+        PnlContent.setBounds(0,0,720,550);
         PnlContent.setLayout(null);
         PnlContent.setBackground(Color.lightGray);
 
@@ -255,6 +257,7 @@ public class CustomerControl extends JPanel implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogTitle("Choose Save Destination");
+
                 int userSelection  = fileChooser.showSaveDialog(exportCsvBtn);
                 if (userSelection == JFileChooser.APPROVE_OPTION){
                     File fileToSave = fileChooser.getSelectedFile();

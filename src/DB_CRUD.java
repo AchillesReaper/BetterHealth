@@ -64,6 +64,28 @@ public class DB_CRUD {
         }
     }
 
+    public static void addCardToDB(MediCard mediCard){
+        try{
+            Connection connection = DriverManager.getConnection(URL,USER,PASSWORD);
+            PreparedStatement pst = connection.prepareStatement(
+                    "INSERT INTO cards VALUES(?,?,?,?)" );
+            pst.setString(1, mediCard.customerID);
+            pst.setString(2, mediCard.cardID);
+            pst.setString(3, mediCard.issuer);
+            pst.setString(4, mediCard.coveredAmount);
+
+            pst.executeUpdate();
+
+            pst.close();
+            connection.close();
+
+            JOptionPane.showMessageDialog(null, "New card is added to this customer","",JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static Object[][] searchCard(String queryString){
         try{
             Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -78,7 +100,7 @@ public class DB_CRUD {
                 data[count][0] = rs.getString("customerID");
                 data[count][1] = rs.getString("cardID");
                 data[count][2] = rs.getString("issuer");
-                data[count][3] = rs.getString("holder");
+                data[count][3] = rs.getString("coveredAmount");
                 count ++;
             }
             rs.close();
