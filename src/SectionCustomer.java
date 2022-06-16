@@ -12,15 +12,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class SectionCustomer extends JPanel implements ActionListener {
-    public JPanel PnlControl = new JPanel();
-    public JPanel PnlContent;
+    public JPanel pnlControl = new JPanel();
+    public JPanel pnlContent;
     public JTextField customerIdTF, firstNameTF, lastNameTF, mobileTF, emailTF, addressTF;
     public JComboBox genderCB, DOBDayCB, DOBMonthCB, DOBYearCB;
     public String gender, DOBDay, DOBMonth, DOBYear, queryString;
     public JButton addNewBtn, searchBtn, clearFormBtn, deleteBtn, addTransactionBtn, addCardBtn, exportCsvBtn;
     public JTable cstmTable;
     public JScrollPane scrollPan;
-
     public Customer targetCustomer;
 
     public SectionCustomer(){
@@ -30,8 +29,8 @@ public class SectionCustomer extends JPanel implements ActionListener {
         constructControlPanel();
         constructContent("select * from customer");
 
-        add(PnlControl);
-        add(PnlContent);
+        add(pnlControl);
+        add(pnlContent);
         setVisible(true);
     }
 
@@ -54,7 +53,7 @@ public class SectionCustomer extends JPanel implements ActionListener {
             if (inputValidation()) {
                 DB_CRUD.addCstmToDB(targetCustomer);
                 constructContent("select * from customer");
-                add(PnlContent);
+                add(pnlContent);
                 setVisible(true);
             } else{
                 System.out.println("sth wrong");
@@ -64,7 +63,7 @@ public class SectionCustomer extends JPanel implements ActionListener {
         if(e.getSource() == searchBtn){
             if(searchValidation()){
                 constructContent(queryString);
-                add(PnlContent);
+                add(pnlContent);
                 setVisible(true);
             }
         }
@@ -72,9 +71,9 @@ public class SectionCustomer extends JPanel implements ActionListener {
     }
 
     public void constructControlPanel(){
-        PnlControl.setBounds(730,0,350,550);
-        PnlControl.setLayout(null);
-        PnlControl.setBackground(Color.lightGray);
+        pnlControl.setBounds(730,0,350,550);
+        pnlControl.setLayout(null);
+        pnlControl.setBackground(Color.lightGray);
 
         // Create elements for the control panel
         JLabel cstmIDLabel = new JLabel("Customer ID:");
@@ -190,37 +189,37 @@ public class SectionCustomer extends JPanel implements ActionListener {
         addCardBtn.setBounds(180,400,160,36);
 
         //add all element to the control panel
-        PnlControl.add(cstmIDLabel);
-        PnlControl.add(customerIdTF);
-        PnlControl.add(firstNameLabel);
-        PnlControl.add(firstNameTF);
-        PnlControl.add(lastNameLabel);
-        PnlControl.add(lastNameTF);
-        PnlControl.add(mobileLabel);
-        PnlControl.add(mobileTF);
-        PnlControl.add(genderLabel);
-        PnlControl.add(genderCB);
-        PnlControl.add(DOBLabel);
-        PnlControl.add(DOBPanel);
-        PnlControl.add(emailLabel);
-        PnlControl.add(emailTF);
-        PnlControl.add(addressLabel);
-        PnlControl.add(addressTF);
-        PnlControl.add(addNewBtn);
-        PnlControl.add(searchBtn);
-        PnlControl.add(clearFormBtn);
-        PnlControl.add(deleteBtn);
-        PnlControl.add(addTransactionBtn);
-        PnlControl.add(addCardBtn);
+        pnlControl.add(cstmIDLabel);
+        pnlControl.add(customerIdTF);
+        pnlControl.add(firstNameLabel);
+        pnlControl.add(firstNameTF);
+        pnlControl.add(lastNameLabel);
+        pnlControl.add(lastNameTF);
+        pnlControl.add(mobileLabel);
+        pnlControl.add(mobileTF);
+        pnlControl.add(genderLabel);
+        pnlControl.add(genderCB);
+        pnlControl.add(DOBLabel);
+        pnlControl.add(DOBPanel);
+        pnlControl.add(emailLabel);
+        pnlControl.add(emailTF);
+        pnlControl.add(addressLabel);
+        pnlControl.add(addressTF);
+        pnlControl.add(addNewBtn);
+        pnlControl.add(searchBtn);
+        pnlControl.add(clearFormBtn);
+        pnlControl.add(deleteBtn);
+        pnlControl.add(addTransactionBtn);
+        pnlControl.add(addCardBtn);
 
     }
 
     public void constructContent(String queryString){
-        if(PnlContent != null){remove(PnlContent);}
-        PnlContent = new JPanel();
-        PnlContent.setBounds(0,0,720,550);
-        PnlContent.setLayout(null);
-        PnlContent.setBackground(Color.lightGray);
+        if(pnlContent != null){remove(pnlContent);}
+        pnlContent = new JPanel();
+        pnlContent.setBounds(0,0,720,550);
+        pnlContent.setLayout(null);
+        pnlContent.setBackground(Color.lightGray);
 
         JLabel contentTitle = new JLabel("Customer Information");
         contentTitle.setBounds(10,10,200,30);
@@ -290,9 +289,9 @@ public class SectionCustomer extends JPanel implements ActionListener {
         scrollPan.setBounds(10,40,700,500);
         cstmTable.setFillsViewportHeight(true);
 
-        PnlContent.add(contentTitle);
-        PnlContent.add(exportCsvBtn);
-        PnlContent.add(scrollPan);
+        pnlContent.add(contentTitle);
+        pnlContent.add(exportCsvBtn);
+        pnlContent.add(scrollPan);
     }
 
     public Boolean inputValidation(){

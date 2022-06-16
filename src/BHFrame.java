@@ -15,6 +15,7 @@ public class BHFrame extends JFrame implements ActionListener {
         setLayout(null);
         setTitle("Better Health Therapy Massage Centre");
         setSize(1100, 660);
+        setResizable(false);
 
         constructMenuPanel();
         sectionPanel = sectionInsert;
@@ -34,8 +35,9 @@ public class BHFrame extends JFrame implements ActionListener {
         }
 
         if (e.getSource() == serviceBtn){
-
-            setVisible(true);
+            sectionPanel = new SectionService();
+            new NewMain(sectionPanel);
+            this.dispose();
         }
 
         if (e.getSource() == customerBtn){
