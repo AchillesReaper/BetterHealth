@@ -6,7 +6,7 @@ public class DB_CRUD {
     public static String USER = "root";
     public static String PASSWORD = "!Q@W3e4r";
 
-    public static void addCstmToDB(Customer targetCustomer){
+    public static void addCustomer(Customer targetCustomer){
         try{
             Connection connection = DriverManager.getConnection(URL,USER,PASSWORD);
             PreparedStatement pst = connection.prepareStatement(
@@ -25,14 +25,14 @@ public class DB_CRUD {
             pst.close();
             connection.close();
 
-            JOptionPane.showMessageDialog(null, "New client is added successfully","",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "New customer is added successfully","",JOptionPane.INFORMATION_MESSAGE);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Object[][] searchCstm(String queryString){
+    public static Object[][] searchCustomer(String queryString){
         try{
             Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
             Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -61,6 +61,35 @@ public class DB_CRUD {
             return data;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void updateCustomer(Customer targetCustomer){
+        try{
+            Connection connection = DriverManager.getConnection(URL,USER,PASSWORD);
+            PreparedStatement pst = connection.prepareStatement(
+                    "UPDATE customer SET firstName = ?, lastName = ?, mobile = ?, email = ?, address = ?, gender = ?, DOB_Y = ?, DOB_M = ?, DOB_D = ? WHERE (`customerID` = ?)");
+            pst.setString(1,targetCustomer.firstName);
+            pst.setString(2,targetCustomer.lastName);
+            pst.setString(3,targetCustomer.mobile);
+            pst.setString(4,targetCustomer.email);
+            pst.setString(5,targetCustomer.address);
+            pst.setString(6,targetCustomer.gender);
+            pst.setString(7,targetCustomer.DOB_Y);
+            pst.setString(8,targetCustomer.DOB_M);
+            pst.setString(9,targetCustomer.DOB_D);
+            pst.setString(10,targetCustomer.customerID);
+
+            pst.executeUpdate();
+
+            pst.close();
+            connection.close();
+
+            JOptionPane.showMessageDialog(null, "Service is updated","Note",JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Service cannot be updated. \nPlease contact your developer","Error",JOptionPane.INFORMATION_MESSAGE);
+//            throw new RuntimeException(e);
         }
     }
 
@@ -127,7 +156,7 @@ public class DB_CRUD {
             pst.close();
             connection.close();
 
-            JOptionPane.showMessageDialog(null, "Service is added to this customer","Note",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "New service is added.","Note",JOptionPane.INFORMATION_MESSAGE);
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "New service cannot add. \nPlease contact your developer","Error",JOptionPane.INFORMATION_MESSAGE);
@@ -136,7 +165,6 @@ public class DB_CRUD {
     }
 
     public static void updateService(Service service){
-//        UPDATE `betterhealth`.`services` SET `price` = '80', `availability` = 'No' WHERE (`serviceID` = '1');
         try{
             Connection connection = DriverManager.getConnection(URL,USER,PASSWORD);
             PreparedStatement pst = connection.prepareStatement(
@@ -176,6 +204,67 @@ public class DB_CRUD {
                 data[count][2] = rs.getString("serviceContent");
                 data[count][3] = rs.getString("price");
                 data[count][4] = rs.getString("availability");
+                count ++;
+            }
+            rs.close();
+            stmt.close();
+            connection.close();
+            return data;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void addTransaction(Transaction transaction){
+        try{
+            Connection connection = DriverManager.getConnection(URL,USER,PASSWORD);
+            PreparedStatement pst = connection.prepareStatement(
+                    "INSERT INTO transactions VALUES(default,?,?,?,?,?,?,?,?,?)" );
+            pst.setString(1, transaction.dateY);
+            pst.setString(2, transaction.dateM);
+            pst.setString(3, transaction.dateD);
+            pst.setString(4, transaction.customerID);
+            pst.setString(5, transaction.serviceID);
+            pst.setString(6, transaction.totalPrice);
+            pst.setString(7, transaction.cardUsed);
+            pst.setString(8, transaction.cardCover);
+            pst.setString(9, transaction.cashPayment);
+
+
+            pst.executeUpdate();
+
+            pst.close();
+            connection.close();
+
+            JOptionPane.showMessageDialog(null, "This transaction is recorded","Note",JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "This transaction is NOT recorded. \nPlease contact your developer","Error",JOptionPane.INFORMATION_MESSAGE);
+//            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object[][] searchTransaction(String queryString){
+        try{
+            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            Statement stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ResultSet rs = stmt.executeQuery(queryString);
+            rs.last();
+            int row_num = rs.getRow();
+            rs.beforeFirst();
+            Object[][] data = new Object[row_num][10];
+            int count = 0;
+            while (rs.next()){
+                data[count][0] = rs.getString("transactionID");
+                data[count][1] = rs.getString("year");
+                data[count][2] = rs.getString("month");
+                data[count][3] = rs.getString("day");
+                data[count][4] = rs.getString("customerID");
+                data[count][5] = rs.getString("serviceID");
+                data[count][6] = rs.getString("price");
+                data[count][7] = rs.getString("cardUsed");
+                data[count][8] = rs.getString("cardCover");
+                data[count][9] = rs.getString("cashPmt");
                 count ++;
             }
             rs.close();

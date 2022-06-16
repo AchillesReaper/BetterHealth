@@ -1,13 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class SectionService extends JPanel {
     public JPanel pnlExtService, pnlAllService, pnlAddService, pnlUpdateService;
-    public JTable tbExtService, tbAllService;
     public JScrollPane scpExtService, scpAllService;
 
     JTextField tfServiceID = new JTextField("",6);
@@ -137,38 +134,25 @@ public class SectionService extends JPanel {
 
         final String[] availabilityA = new String[1];
         JRadioButton btnYes = new JRadioButton("Yes");
-        btnYes.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                availabilityA[0] = "Yes";
-            }
-        });
+        btnYes.addActionListener(e -> availabilityA[0] = "Yes");
         JRadioButton btnNo = new JRadioButton("No");
-        btnNo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                availabilityA[0] = "No";
-            }
-        });
+        btnNo.addActionListener(e -> availabilityA[0] = "No");
         ButtonGroup btnGroup = new ButtonGroup();
         btnGroup.add(btnYes);
         btnGroup.add(btnNo);
         JPanel groupButton = new JPanel();
         groupButton.add(btnYes);
         groupButton.add(btnNo);
-        groupButton.setLayout(new FlowLayout(FlowLayout.LEADING));
+        groupButton.setLayout(new FlowLayout(FlowLayout.LEADING,10,0));
         groupButton.setBackground(Color.lightGray);
 
         JButton btnAddService = new JButton("Add Service");
-        btnAddService.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Service service = new Service(tfServiceNameA.getText(),tfServiceContentA.getText(),tfPriceA.getText(), availabilityA[0]);
-                if (inputValidate(service)){
-                    DB_CRUD.addServiceToDB(service);
-                    showExtService();
-                    showAllService();
-                }
+        btnAddService.addActionListener(e -> {
+            Service service = new Service(tfServiceNameA.getText(),tfServiceContentA.getText(),tfPriceA.getText(), availabilityA[0]);
+            if (inputValidate(service)){
+                DB_CRUD.addServiceToDB(service);
+                showExtService();
+                showAllService();
             }
         });
 
@@ -217,21 +201,14 @@ public class SectionService extends JPanel {
         JLabel lbPrice = new JLabel("Price:");
         JLabel lbAvailable = new JLabel("Available:");
         tfServiceID.setEditable(false);
+        tfServiceName.setEditable(false);
+        tfServiceContent.setEditable(false);
+        tfPrice.setEditable(false);
 
         JRadioButton btnYes = new JRadioButton("Yes");
-        btnYes.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                availability[0] = "Yes";
-            }
-        });
+        btnYes.addActionListener(e -> availability[0] = "Yes");
         JRadioButton btnNo = new JRadioButton("No");
-        btnNo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                availability[0] = "No";
-            }
-        });
+        btnNo.addActionListener(e -> availability[0] = "No");
 
         ButtonGroup btnGroup = new ButtonGroup();
         btnGroup.add(btnYes);
@@ -239,25 +216,22 @@ public class SectionService extends JPanel {
         JPanel groupButton = new JPanel();
         groupButton.add(btnYes);
         groupButton.add(btnNo);
-        groupButton.setLayout(new FlowLayout(FlowLayout.LEADING));
+        groupButton.setLayout(new FlowLayout(FlowLayout.LEADING,10,0));
         groupButton.setBackground(Color.lightGray);
 
         JButton btnUpdateService = new JButton("Update Service");
-        btnUpdateService.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Service service = new Service(tfServiceName.getText(),tfServiceContent.getText(),tfPrice.getText(), availability[0]);
+        btnUpdateService.addActionListener(e -> {
+            Service service = new Service(tfServiceName.getText(),tfServiceContent.getText(),tfPrice.getText(), availability[0]);
 
-                if (tfServiceID.getText().length() > 0 ){
-                    service.setID(tfServiceID.getText());
-                }
-                if (inputValidate(service)){
-                    DB_CRUD.updateService(service);
-                    showExtService();
-                    showAllService();
-                }
-
+            if (tfServiceID.getText().length() > 0 ){
+                service.setID(tfServiceID.getText());
             }
+            if (inputValidate(service)){
+                DB_CRUD.updateService(service);
+                showExtService();
+                showAllService();
+            }
+
         });
 
         lbServiceID.setBounds(10,40,90,30);
@@ -294,8 +268,8 @@ public class SectionService extends JPanel {
     }
 
     public Boolean inputValidate(Service service){
-        Boolean pVal = true;
-        Boolean oVal = true;
+        boolean pVal = true;
+        boolean oVal = true;
         try {
             int p = Integer.parseInt(service.price);
         } catch (NumberFormatException e) {
