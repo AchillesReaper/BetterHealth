@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Calendar;
@@ -118,26 +116,17 @@ public class Pop_newTrsc {
         JComboBox cbDateD = new JComboBox(dayCB);
         JComboBox cbDateM = new JComboBox(monthCB);
         JComboBox cbDateY = new JComboBox(yearCB);
-        cbDateD.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dateD = (String) cbDateD.getSelectedItem();
-                constPreviewPanel();
-            }
+        cbDateD.addActionListener(e -> {
+            dateD = (String) cbDateD.getSelectedItem();
+            constPreviewPanel();
         });
-        cbDateM.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dateM = (String) cbDateM.getSelectedItem();
-                constPreviewPanel();
-            }
+        cbDateM.addActionListener(e -> {
+            dateM = (String) cbDateM.getSelectedItem();
+            constPreviewPanel();
         });
-        cbDateY.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dateY = (String) cbDateY.getSelectedItem();
-                constPreviewPanel();
-            }
+        cbDateY.addActionListener(e -> {
+            dateY = (String) cbDateY.getSelectedItem();
+            constPreviewPanel();
         });
 
 
@@ -371,9 +360,9 @@ public class Pop_newTrsc {
         frame.add(pnlPreview);
         frame.setVisible(true);
     }
-    public Boolean inputValidation(Transaction transaction){
-        Boolean inputValid = true;
-        if (dateY.length() == 0 || dateM.length() ==0 || dateD.length() == 0){
+    public boolean inputValidation(Transaction transaction){
+        boolean inputValid = true;
+        if (transaction.dateY.length() == 0 || transaction.dateM.length() ==0 || transaction.dateD.length() == 0){
             JOptionPane.showMessageDialog(frame,"Please select a date","Input Error", JOptionPane.ERROR_MESSAGE);
             inputValid = false;
         }

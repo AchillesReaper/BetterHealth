@@ -267,7 +267,7 @@ public class SectionService extends JPanel {
         setVisible(true);
     }
 
-    public Boolean inputValidate(Service service){
+    public boolean inputValidate(Service service){
         boolean pVal = true;
         boolean oVal = true;
         try {
