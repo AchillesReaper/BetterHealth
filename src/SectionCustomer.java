@@ -65,7 +65,22 @@ public class SectionCustomer extends JPanel{
         tfLastName = new JTextField("",6);
         tfMobile = new JTextField("",6);
         tfEmail = new JTextField("",6);
+
+        JCheckBox cbAddress = new JCheckBox();
         tfAddress = new JTextField("",6);
+        cbAddress.addActionListener(e ->{
+            if (cbAddress.isSelected()){
+                tfAddress.setBackground(Color.darkGray);
+                tfAddress.setEditable(false);
+            } else {
+                tfAddress.setBackground(Color.white);
+                tfAddress.setEditable(true);
+            }
+
+        });
+        cbAddress.setBounds(100,320,240,30);
+        pnlControl.add(cbAddress);
+
 
         String[] genArr = {"","Male","Female","Not Specified"};
         cbGender = new JComboBox(genArr);
@@ -109,13 +124,15 @@ public class SectionCustomer extends JPanel{
         btnUpdateCustomer.setBackground(Color.red);
 
         btnAddCustomer.addActionListener(e -> {
-            if (inputValidation()) {
-                DB_CRUD.addCustomer(targetCustomer);
-                constructContent("select * from customer");
-                add(pnlContent);
-                setVisible(true);
-            } else{
-                System.out.println("sth wrong");
+            if (tfCustomerID.getText().length()>0){
+                JOptionPane.showMessageDialog(null,"Please clear the form first before adding a customer","Reminder",JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                if (inputValidation()) {
+                    DB_CRUD.addCustomer(targetCustomer);
+                    constructContent("select * from customer");
+                    add(pnlContent);
+                    setVisible(true);
+                }
             }
         });
         btnSearchCustomer.addActionListener(e -> {
@@ -228,6 +245,7 @@ public class SectionCustomer extends JPanel{
         tbCustomer = new JTable(data, colName);
         tbCustomer.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
         tbCustomer.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        tbCustomer.setAutoCreateRowSorter(true);
         tbCustomer.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -292,7 +310,7 @@ public class SectionCustomer extends JPanel{
         setVisible(true);
     }
 
-    public Boolean inputValidation(){
+    public boolean inputValidation(){
         //validation can be increase upon request
         firstName = tfFirstName.getText();
         lastName = tfLastName.getText();

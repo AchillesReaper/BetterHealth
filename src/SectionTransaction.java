@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
@@ -10,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class SectionTransaction extends JPanel {
-    public JPanel pnlDetail, pnlContent;
+    public JPanel pnlDetail, pnlContent, pnlFilter;
 
     public String dateFull = "";
     public String dateY = "";
@@ -24,19 +22,228 @@ public class SectionTransaction extends JPanel {
     public String serviceContent = "";
     public String servicePrice = "";
     public String cardID = "";
+    public String cardIssuer = "";
     public String cardCover = "";
     public String cashPayment = "";
+
+
+    public String[] listStartDate = new String[3];
+    public String[] listEndDate = new String[3];
+    public Integer[] trimListStartDate = new Integer[3];
+    public Integer[] trimListEndDate = new Integer[3];
+
+
 
     public SectionTransaction(){
         setBounds(10,70,1080,700);
         setLayout(null);
-        constructContentPan();
+        constructContentPan("select * from detailed_transaction");
+        constructFilter();
         showDetail();
     }
 
-    public void constructContentPan(){
+    public void constructFilter(){
+        pnlFilter = new JPanel(null);
+        pnlFilter.setBounds(0,0,720,70);
+        pnlFilter.setBackground(Color.lightGray);
+
+        JLabel lbFilterTitle = new JLabel("Filer by Date");
+        lbFilterTitle.setBounds(10,5,160,30);
+        lbFilterTitle.setFont(new Font("SansSerif", Font.BOLD, 14));
+
+        JCheckBox cbStartDate = new JCheckBox("Start Date:");
+        JCheckBox cbEndDate = new JCheckBox("End Date: ");
+
+        JTextField tfSdYear = new JTextField("YYYY");
+        JTextField tfSdMonth = new JTextField("MM");
+        JTextField tfSdDay = new JTextField("DD");
+        JTextField tfEdYear = new JTextField("YYYY");
+        JTextField tfEdMonth = new JTextField("MM");
+        JTextField tfEdDay = new JTextField("DD");
+        tfSdYear.setEditable(false);
+        tfSdMonth.setEditable(false);
+        tfSdDay.setEditable(false);
+        tfEdYear.setEditable(false);
+        tfEdMonth.setEditable(false);
+        tfEdDay.setEditable(false);
+
+        tfSdYear.setForeground(Color.lightGray);
+        tfSdMonth.setForeground(Color.lightGray);
+        tfSdDay.setForeground(Color.lightGray);
+        tfEdYear.setForeground(Color.lightGray);
+        tfEdMonth.setForeground(Color.lightGray);
+        tfEdDay.setForeground(Color.lightGray);
+
+        tfSdYear.setBackground(Color.darkGray);
+        tfSdMonth.setBackground(Color.darkGray);
+        tfSdDay.setBackground(Color.darkGray);
+        tfEdYear.setBackground(Color.darkGray);
+        tfEdMonth.setBackground(Color.darkGray);
+        tfEdDay.setBackground(Color.darkGray);
+
+        cbStartDate.addActionListener(e-> {
+            if (cbStartDate.isSelected()){
+                tfSdYear.setText("");
+                tfSdMonth.setText("");
+                tfSdDay.setText("");
+                tfSdYear.setForeground(Color.BLACK);
+                tfSdMonth.setForeground(Color.BLACK);
+                tfSdDay.setForeground(Color.BLACK);
+                tfSdYear.setEditable(true);
+                tfSdYear.setBackground(Color.white);
+                tfSdMonth.setEditable(true);
+                tfSdMonth.setBackground(Color.white);
+                tfSdDay.setEditable(true);
+                tfSdDay.setBackground(Color.white);
+
+
+            } else {
+                tfSdYear.setText("YYYY");
+                tfSdMonth.setText("MM");
+                tfSdDay.setText("DD");
+                tfSdYear.setEditable(false);
+                tfSdYear.setForeground(Color.lightGray);
+                tfSdYear.setBackground(Color.darkGray);
+                tfSdMonth.setEditable(false);
+                tfSdMonth.setForeground(Color.lightGray);
+                tfSdMonth.setBackground(Color.darkGray);
+                tfSdDay.setEditable(false);
+                tfSdDay.setForeground(Color.lightGray);
+                tfSdDay.setBackground(Color.darkGray);
+            }
+
+        });
+
+        cbEndDate.addActionListener(e-> {
+            if (cbEndDate.isSelected()){
+                tfEdYear.setText("");
+                tfEdMonth.setText("");
+                tfEdDay.setText("");
+                tfEdYear.setForeground(Color.BLACK);
+                tfEdMonth.setForeground(Color.BLACK);
+                tfEdDay.setForeground(Color.BLACK);
+                tfEdYear.setEditable(true);
+                tfEdMonth.setEditable(true);
+                tfEdDay.setEditable(true);
+                tfEdYear.setBackground(Color.white);
+                tfEdMonth.setBackground(Color.white);
+                tfEdDay.setBackground(Color.white);
+            }else{
+                tfEdYear.setText("YYYY");
+                tfEdMonth.setText("MM");
+                tfEdDay.setText("DD");
+                tfEdYear.setForeground(Color.lightGray);
+                tfEdMonth.setForeground(Color.lightGray);
+                tfEdDay.setForeground(Color.lightGray);
+                tfEdYear.setEditable(false);
+                tfEdMonth.setEditable(false);
+                tfEdDay.setEditable(false);
+                tfEdYear.setBackground(Color.darkGray);
+                tfEdMonth.setBackground(Color.darkGray);
+                tfEdDay.setBackground(Color.darkGray);
+
+            }
+
+        });
+
+        JButton btFilter = new JButton("Search");
+
+        btFilter.addActionListener(e -> {
+            String qStr = "select * from detailed_transaction";
+            if (!(cbStartDate.isSelected()) && !(cbEndDate.isSelected())){
+                JOptionPane.showMessageDialog(this,"Date range is not selected","Error",JOptionPane.ERROR_MESSAGE);
+            } else {
+                if (cbStartDate.isSelected()){
+                    listStartDate[0] = tfSdYear.getText();
+                    listStartDate[1] = tfSdMonth.getText();
+                    listStartDate[2] = tfSdDay.getText();
+                    if (inputValidation(listStartDate, "Start Date")){
+                        qStr += generateQueryStringToken("S");
+                    }
+                }
+
+                if (cbEndDate.isSelected()){
+                    listEndDate[0] = tfEdYear.getText();
+                    listEndDate[1] = tfEdMonth.getText();
+                    listEndDate[2] = tfEdDay.getText();
+                    if (inputValidation(listEndDate, "End Date")){
+                        qStr += generateQueryStringToken("E");
+                    }
+                }
+
+                constructContentPan(qStr);
+            }
+        });
+
+        //add constrain;
+        JPanel pnlStartD = new JPanel(new FlowLayout(FlowLayout.LEADING,0,0));
+        pnlStartD.setBounds(170,5,210,30);
+        pnlStartD.setBackground(Color.lightGray);
+        pnlStartD.add(cbStartDate);
+        pnlStartD.add(tfSdYear);
+        pnlStartD.add(tfSdMonth);
+        pnlStartD.add(tfSdDay);
+
+        JPanel pnlEndD = new JPanel(new FlowLayout(FlowLayout.LEADING,0,0));
+        pnlEndD.setBounds(170,35,210,30);
+        pnlEndD.setBackground(Color.lightGray);
+        pnlEndD.add(cbEndDate);
+        pnlEndD.add(tfEdYear);
+        pnlEndD.add(tfEdMonth);
+        pnlEndD.add(tfEdDay);
+
+        btFilter.setBounds(600,5,80,30);
+
+        //add to panel;
+        pnlFilter.add(lbFilterTitle);
+        pnlFilter.add(pnlStartD);
+        pnlFilter.add(pnlEndD);
+        pnlFilter.add(btFilter);
+
+        add(pnlFilter);
+        setVisible(true);
+    }
+    public String generateQueryStringToken(String token){
+        String qsToken = "";
+
+        if (token.equals("S")){
+            qsToken += " WHERE year >= "+listStartDate[0]+" and month >= "+listStartDate[1]+" and day >= "+listStartDate[2];
+        }
+        if (token.equals("E")){
+            qsToken += " WHERE year >= "+listEndDate[0]+" and month >= "+listEndDate[1]+" and day >= "+listEndDate[2];
+        }
+
+        return qsToken;
+    }
+
+    public boolean inputValidation(String[] dateList, String name){
+        boolean valResult = true;
+        if (dateList[0].length()==0 || dateList[1].length()==0 || dateList[2].length()==0){
+            valResult = false;
+            JOptionPane.showMessageDialog(null, "Date input of "+name+" is not completed.\nConditions from "+name+" is ignored.", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                if (name.equals("Start Date")){
+                    trimListStartDate[0] = Integer.parseInt(dateList[0]);
+                    trimListStartDate[1] = Integer.parseInt(dateList[1]);
+                    trimListStartDate[2] = Integer.parseInt(dateList[2]);
+                }else{
+                    trimListEndDate[0] = Integer.parseInt(dateList[0]);
+                    trimListEndDate[1] = Integer.parseInt(dateList[1]);
+                    trimListEndDate[2] = Integer.parseInt(dateList[2]);
+                }
+
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Date input of "+name+" is not integer.\nConditions from "+name+" is ignored.", "ERROR MESSAGE", JOptionPane.ERROR_MESSAGE);
+                valResult = false;
+            }
+        }
+        return valResult;
+    }
+
+    public void constructContentPan(String queryString){
         pnlContent = new JPanel(null);
-        pnlContent.setBounds(0,0,720,550);
+        pnlContent.setBounds(0,75,720,475);
         pnlContent.setBackground(Color.lightGray);
 
         JLabel contentTitle = new JLabel("Transactions of Better Health");
@@ -45,16 +252,15 @@ public class SectionTransaction extends JPanel {
         JButton exportCsvBtn = new JButton("Export CSV");
         exportCsvBtn.setBounds(595,10,120,30);
 
-        String queryString = "select * from transactions";
-
         Object[][] data = DB_CRUD.searchTransaction(queryString);
         if (data.length == 0){
             JOptionPane.showMessageDialog(null,"No Record is found.","",JOptionPane.PLAIN_MESSAGE);
         }
-        String[] colName = {"Trsc. ID", "Year", "Month","Day","Customer","Service","Price","Card","Card Cover","Cash Paid"};
+        String[] colName = {"Trsc. ID", "Year", "Month","Day","Customer ID","First Name", "Last Name","Service ID","Service","Price","Card","Issuer","Card Cover","Cash Paid"};
         JTable tbTransaction = new JTable(data, colName);
         tbTransaction.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
         tbTransaction.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        tbTransaction.setAutoCreateRowSorter(true);
         tbTransaction.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -64,26 +270,18 @@ public class SectionTransaction extends JPanel {
                 dateM = tbTransaction.getModel().getValueAt(row,2).toString();
                 dateD = tbTransaction.getModel().getValueAt(row,3).toString();
                 customerID = tbTransaction.getModel().getValueAt(row,4).toString();
-                serviceID = tbTransaction.getModel().getValueAt(row,5).toString();
-                servicePrice = tbTransaction.getModel().getValueAt(row,6).toString();
-                cardID = tbTransaction.getModel().getValueAt(row,7).toString();
-                cardCover = tbTransaction.getModel().getValueAt(row,8).toString();
-                cashPayment = tbTransaction.getModel().getValueAt(row,9).toString();
+                firstName = tbTransaction.getModel().getValueAt(row,5).toString();
+                lastName = tbTransaction.getModel().getValueAt(row,6).toString();
+                serviceID = tbTransaction.getModel().getValueAt(row,7).toString();
+                serviceName = tbTransaction.getModel().getValueAt(row,8).toString();
+                serviceContent = tbTransaction.getModel().getValueAt(row,9).toString();
+                servicePrice = tbTransaction.getModel().getValueAt(row,10).toString();
+                cardID = tbTransaction.getModel().getValueAt(row,11).toString();
+                cardIssuer = tbTransaction.getModel().getValueAt(row,12).toString();
+                cardCover = tbTransaction.getModel().getValueAt(row,13).toString();
+                cashPayment = tbTransaction.getModel().getValueAt(row,14).toString();
 
                 dateFull = dateD+"/"+dateM+"/"+dateY;
-
-                Object[][] subData;
-                String queryString;
-
-                queryString = "select * from customer WHERE customerID = '" + customerID + "'";
-                subData = DB_CRUD.searchCustomer(queryString);
-                firstName = (String) subData[0][1];
-                lastName = (String) subData[0][2];
-
-                queryString = "select * from services WHERE serviceID = '" + serviceID + "'";
-                subData = DB_CRUD.searchService(queryString);
-                serviceName = (String) subData[0][1];
-                serviceContent = (String) subData[0][2];
 
                 showDetail();
             }
@@ -122,7 +320,7 @@ public class SectionTransaction extends JPanel {
         });
 
         JScrollPane scpTransaction = new JScrollPane(tbTransaction);
-        scpTransaction.setBounds(10,40,700,500);
+        scpTransaction.setBounds(10,40,700,425);
         tbTransaction.setFillsViewportHeight(true);
 
         pnlContent.add(contentTitle);
@@ -146,7 +344,7 @@ public class SectionTransaction extends JPanel {
         JLabel lbDate = new JLabel("Date:");
         JLabel lbCustomerID = new JLabel("CustomerID:");
         JLabel lbFirstName = new JLabel("Fist Name:");
-        JLabel lbLastName = new JLabel("LastName:");
+        JLabel lbLastName = new JLabel("Last Name:");
         JLabel lbServiceID = new JLabel("Service ID:");
         JLabel lbServiceName = new JLabel("Service Name:");
         JLabel lbServiceContent = new JLabel("Service Content:");
@@ -165,7 +363,7 @@ public class SectionTransaction extends JPanel {
         JTextField tfServiceName = new JTextField(serviceName);
         JTextField tfServiceContent = new JTextField(serviceContent);
         JTextField tfServicePrice = new JTextField(servicePrice);
-        JTextField tfMediCardUsed = new JTextField(cardID);
+        JTextField tfMediCardUsed = new JTextField(cardIssuer + "-" + cardID);
         JTextField tfCoveredAmount = new JTextField(cardCover);
         JTextField tfCashPaid = new JTextField(cashPayment);
 
