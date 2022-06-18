@@ -252,7 +252,7 @@ public class DB_CRUD {
             rs.last();
             int row_num = rs.getRow();
             rs.beforeFirst();
-            Object[][] data = new Object[row_num][10];
+            Object[][] data = new Object[row_num][15];
             int count = 0;
             while (rs.next()){
                 data[count][0] = rs.getString("transactionID");
@@ -260,11 +260,16 @@ public class DB_CRUD {
                 data[count][2] = rs.getString("month");
                 data[count][3] = rs.getString("day");
                 data[count][4] = rs.getString("customerID");
-                data[count][5] = rs.getString("serviceID");
-                data[count][6] = rs.getString("price");
-                data[count][7] = rs.getString("cardUsed");
-                data[count][8] = rs.getString("cardCover");
-                data[count][9] = rs.getString("cashPmt");
+                data[count][5] = rs.getString("patient_first_name");
+                data[count][6] = rs.getString("patient_last_name");
+                data[count][7] = rs.getString("serviceID");
+                data[count][8] = rs.getString("serviceName");
+                data[count][9] = rs.getString("serviceContent");
+                data[count][10] = rs.getString("price");
+                data[count][11] = rs.getString("cardID");
+                data[count][12] = rs.getString("issuer");
+                data[count][13] = rs.getString("coveredAmount");
+                data[count][14] = rs.getString("cashPmt");
                 count ++;
             }
             rs.close();

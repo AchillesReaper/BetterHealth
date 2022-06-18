@@ -75,12 +75,12 @@ public class SectionService extends JPanel {
         pnlAllService.setLayout(null);
         pnlAllService.setBackground(Color.lightGray);
 
-        JLabel contentTitle = new JLabel("All Service Store in Database");
+        JLabel contentTitle = new JLabel("Services not on list");
         contentTitle.setBounds(10,0,250,30);
         contentTitle.setFont(new Font("SansSerif", Font.BOLD, 14));
 
 
-        String queryString = "select * from services";
+        String queryString = "select * from services where availability = 'No'";
         Object[][] data = DB_CRUD.searchService(queryString);
         if (data.length == 0){
             JOptionPane.showMessageDialog(null,"No Record is found.","",JOptionPane.PLAIN_MESSAGE);
