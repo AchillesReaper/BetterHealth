@@ -256,7 +256,7 @@ public class SectionTransaction extends JPanel {
         if (data.length == 0){
             JOptionPane.showMessageDialog(null,"No Record is found.","",JOptionPane.PLAIN_MESSAGE);
         }
-        String[] colName = {"Trsc. ID", "Year", "Month","Day","Customer ID","First Name", "Last Name","Service ID","Service","Price","Card","Issuer","Card Cover","Cash Paid"};
+        String[] colName = {"Trsc. ID", "Year", "Month", "Day", "Customer ID", "First Name", "Last Name", "Service ID", "Service", "Content", "Price", "Card", "Issuer", "Card Cover", "Cash Paid"};
         JTable tbTransaction = new JTable(data, colName);
         tbTransaction.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
         tbTransaction.setFont(new Font("SansSerif", Font.PLAIN, 12));
@@ -298,11 +298,11 @@ public class SectionTransaction extends JPanel {
                     FileWriter fileWriter = new FileWriter(fileToSave);
                     BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
                     bufferedWriter.write("Transaction History of Better Health");
-                    bufferedWriter.write("transactionID,year,month,day,customerID,serviceID,totalPrice,cardUsed,cardCover,cashPayment");
+                    bufferedWriter.write("Trsc. ID, Year, Month,Day,Customer ID,First Name, Last Name,Service ID,Service,Content,Price,Card,Issuer,Card Cover,Cash Paid");
                     bufferedWriter.newLine();
                     for (int i = 0; i < data.length; i++){
-                        for (int j = 0; j < 11; j++){
-                            if(j != 10){
+                        for (int j = 0; j < 14; j++){
+                            if(j != 13){
                                 bufferedWriter.write(data[i][j] + ",");
                             }else{
                                 bufferedWriter.write(data[i][j] + "");
