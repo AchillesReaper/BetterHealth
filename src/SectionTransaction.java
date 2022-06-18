@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -290,6 +291,8 @@ public class SectionTransaction extends JPanel {
         exportCsvBtn.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Choose Save Destination");
+            fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("CSV Only","CSV"));
+            fileChooser.setAcceptAllFileFilterUsed(true);
 
             int userSelection  = fileChooser.showSaveDialog(exportCsvBtn);
             if (userSelection == JFileChooser.APPROVE_OPTION){
@@ -301,8 +304,8 @@ public class SectionTransaction extends JPanel {
                     bufferedWriter.write("Trsc. ID, Year, Month,Day,Customer ID,First Name, Last Name,Service ID,Service,Content,Price,Card,Issuer,Card Cover,Cash Paid");
                     bufferedWriter.newLine();
                     for (int i = 0; i < data.length; i++){
-                        for (int j = 0; j < 14; j++){
-                            if(j != 13){
+                        for (int j = 0; j < 15; j++){
+                            if(j != 14){
                                 bufferedWriter.write(data[i][j] + ",");
                             }else{
                                 bufferedWriter.write(data[i][j] + "");
