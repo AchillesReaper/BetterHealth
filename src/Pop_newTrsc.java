@@ -36,7 +36,7 @@ public class Pop_newTrsc {
         lastName = (String) subData[0][2];
 
 
-        frame.setBounds(0,0,660,620);
+        frame.setBounds(0,0,670,620);
         frame.setLayout(null);
 //        frame.setResizable(false);
         constCustomerInfoPanel();

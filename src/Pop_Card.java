@@ -18,7 +18,7 @@ public class Pop_Card {
 //    public Object[][] data;
 
     public Pop_Card(String customerID, String firstName, String lastName){
-        frame.setBounds(0,0,510,420);
+        frame.setBounds(0,0,520,420);
         frame.setLayout(null);
         frame.setResizable(false);
 

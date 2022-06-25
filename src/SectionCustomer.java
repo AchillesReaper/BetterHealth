@@ -66,21 +66,7 @@ public class SectionCustomer extends JPanel{
         tfMobile = new JTextField("",6);
         tfEmail = new JTextField("",6);
 
-        JCheckBox cbAddress = new JCheckBox();
         tfAddress = new JTextField("",6);
-        cbAddress.addActionListener(e ->{
-            if (cbAddress.isSelected()){
-                tfAddress.setBackground(Color.darkGray);
-                tfAddress.setEditable(false);
-            } else {
-                tfAddress.setBackground(Color.white);
-                tfAddress.setEditable(true);
-            }
-
-        });
-        cbAddress.setBounds(100,320,240,30);
-        pnlControl.add(cbAddress);
-
 
         String[] genArr = {"","Male","Female","Not Specified"};
         cbGender = new JComboBox(genArr);
@@ -297,7 +283,6 @@ public class SectionCustomer extends JPanel{
                 }
             }
         });
-
         scpCustomer = new JScrollPane(tbCustomer);
         scpCustomer.setBounds(10,40,700,500);
         tbCustomer.setFillsViewportHeight(true);

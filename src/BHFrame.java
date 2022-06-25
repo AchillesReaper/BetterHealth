@@ -14,7 +14,7 @@ public class BHFrame extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
         setTitle("Better Health Therapy Massage Centre");
-        setSize(1100, 660);
+        setSize(1110, 660);
         setResizable(false);
 
         constructMenuPanel();
