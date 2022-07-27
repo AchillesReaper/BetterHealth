@@ -291,4 +291,21 @@ public class DB_CRUD {
             throw new RuntimeException(e);
         }
     }
+
+    public static void deleteTransaction(String transactionID){
+        try{
+            Connection connection = DriverManager.getConnection(URL,USER,PASSWORD);
+            PreparedStatement pst = connection.prepareStatement(
+                    "DELETE FROM `betterhealth`.`transactions` WHERE (`transactionID` = ?)" );
+            pst.setString(1, transactionID);
+            pst.executeUpdate();
+            pst.close();
+            connection.close();
+
+            JOptionPane.showMessageDialog(null, "Transaction (ID = " + transactionID +") is deleted","Note",JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

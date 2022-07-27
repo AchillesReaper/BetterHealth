@@ -11,6 +11,7 @@ import java.io.IOException;
 public class SectionTransaction extends JPanel {
     public JPanel pnlDetail, pnlContent, pnlFilter;
 
+    public String transactionID = "";
     public String dateFull = "";
     public String dateY = "";
     public String dateM = "";
@@ -40,7 +41,7 @@ public class SectionTransaction extends JPanel {
         setLayout(null);
         constructContentPan("select * from detailed_transaction");
         constructFilter();
-        showDetail();
+        showDetail("");
     }
 
     public void constructFilter(){
@@ -267,6 +268,7 @@ public class SectionTransaction extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 int row = tbTransaction.getSelectedRow();
+                transactionID = tbTransaction.getModel().getValueAt(row,0).toString();
                 dateY = tbTransaction.getModel().getValueAt(row,1).toString();
                 dateM = tbTransaction.getModel().getValueAt(row,2).toString();
                 dateD = tbTransaction.getModel().getValueAt(row,3).toString();
@@ -284,7 +286,8 @@ public class SectionTransaction extends JPanel {
 
                 dateFull = dateD+"/"+dateM+"/"+dateY;
 
-                showDetail();
+                showDetail(transactionID);
+
             }
         });
 
@@ -334,13 +337,41 @@ public class SectionTransaction extends JPanel {
         setVisible(true);
     }
 
-    public  void showDetail(){
+    public  void showDetail(String transactionID){
+        System.out.println(transactionID);
+        System.out.println("IDlength = " + transactionID.length());
         if (pnlDetail != null){remove(pnlDetail);}
         pnlDetail = new JPanel(null);
         pnlDetail.setBackground(Color.lightGray);
         pnlDetail.setBounds(730,0,350,550);
 
-        JLabel lbTrscDetail = new JLabel("Transaction Detail");
+        JLabel lbTrscDetail = new JLabel();
+        JButton btnDeleteTransaction = new JButton();
+        if (transactionID.length() == 0){
+            System.out.println("if triggered");
+            lbTrscDetail.setText("Transaction Detail");
+            btnDeleteTransaction.setText("Delete Transaction");
+        }else{
+            System.out.println("else triggered");
+            lbTrscDetail.setText("Transaction Detail: ID = "+transactionID);
+            btnDeleteTransaction.setText("Delete Transaction ID = "+transactionID);
+        }
+        btnDeleteTransaction.setBackground(Color.red);
+        btnDeleteTransaction.setBounds(45,450,200,30);
+        btnDeleteTransaction.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnDeleteTransaction.addActionListener(e ->{
+
+            if (transactionID.length() == 0){
+                JOptionPane.showMessageDialog(null,"Please select a customer","Reminder",JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                int input = JOptionPane.showConfirmDialog(null,"Confirm delete transaction (ID = "+transactionID+")?");
+                if (input == 0){
+                    DB_CRUD.deleteTransaction(transactionID);
+                    constructContentPan("select * from detailed_transaction");
+                }
+            }
+        });
+
         lbTrscDetail.setFont(new Font("SansSerif", Font.BOLD, 14));
         lbTrscDetail.setBounds(10,5,200,30);
 
@@ -382,6 +413,9 @@ public class SectionTransaction extends JPanel {
         tfCoveredAmount.setEditable(false);
         tfCashPaid.setEditable(false);
 
+
+
+
         lbDate.setBounds(10,40,120,30);
         lbCustomerID.setBounds(10,70,120,30);
         lbFirstName.setBounds(10,100,120,30);
@@ -409,6 +443,8 @@ public class SectionTransaction extends JPanel {
         tfCoveredAmount.setBounds(120,360,160,30);
         tfCashPaid.setBounds(120,390,160,30);
 
+
+
         pnlDetail.add(lbTrscDetail);
         pnlDetail.add(lbDate);
         pnlDetail.add(lbCustomerID);
@@ -433,6 +469,7 @@ public class SectionTransaction extends JPanel {
         pnlDetail.add(tfMediCardUsed);
         pnlDetail.add(tfCoveredAmount);
         pnlDetail.add(tfCashPaid);
+        pnlDetail.add(btnDeleteTransaction);
 
 
         add(pnlDetail);
