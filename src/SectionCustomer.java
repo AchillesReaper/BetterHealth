@@ -29,7 +29,7 @@ public class SectionCustomer extends JPanel{
     public String DOB_Y = "";
     public String queryString = "";
 
-    public JButton btnAddCustomer, btnSearchCustomer, btnClearForm, btnUpdateCustomer, btnAddTransaction, btnAddCard, btnExportCsv;
+    public JButton btnAddCustomer, btnSearchCustomer, btnClearForm, btnUpdateCustomer, btnAddCard, btnAddTransaction, btnSearchTransaction, btnExportCsv;
     public JTable tbCustomer;
     public JScrollPane scpCustomer;
     public Customer targetCustomer;
@@ -105,10 +105,12 @@ public class SectionCustomer extends JPanel{
         btnSearchCustomer = new JButton("Search Customer");
         btnClearForm = new JButton("Clear Form");
         btnUpdateCustomer = new JButton("Update Customer");
-        btnAddTransaction = new JButton("New Transaction");
         btnAddCard = new JButton("Add Medi-Card");
-        btnUpdateCustomer.setBackground(Color.red);
+        btnAddTransaction = new JButton("New Transaction");
+        btnSearchTransaction = new JButton("Search Transaction");
 
+
+        btnUpdateCustomer.setBackground(Color.red);
         btnAddCustomer.addActionListener(e -> {
             if (tfCustomerID.getText().length()>0){
                 JOptionPane.showMessageDialog(null,"Please clear the form first before adding a customer","Reminder",JOptionPane.INFORMATION_MESSAGE);
@@ -140,6 +142,7 @@ public class SectionCustomer extends JPanel{
                 if (inputValidation()){
                     targetCustomer.setCustomerID(customerID);
                     DB_CRUD.updateCustomer(targetCustomer);
+                    constructContent("select * from customer");
                 }
             }
         });
@@ -155,6 +158,15 @@ public class SectionCustomer extends JPanel{
                 new Pop_Card(tfCustomerID.getText(), tfFirstName.getText(), tfLastName.getText());
             }else{
                 JOptionPane.showMessageDialog(null,"Please select a customer","Reminder",JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        btnSearchTransaction.addActionListener(e -> {
+            customerID = tfCustomerID.getText();
+            if (customerID.length() == 0){
+                JOptionPane.showMessageDialog(null,"Please select a customer","Reminder",JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                SectionTransaction sectionInput = new SectionTransaction("select * from detailed_transaction where customerID = "+customerID);
+                new NewMain(sectionInput);
             }
         });
 
@@ -181,8 +193,9 @@ public class SectionCustomer extends JPanel{
         btnSearchCustomer.setBounds(10,400,160,36);
         btnClearForm.setBounds(10,450,160,36);
         btnUpdateCustomer.setBounds(10,500,160,36);
-        btnAddTransaction.setBounds(180,350,160,36);
-        btnAddCard.setBounds(180,400,160,36);
+        btnAddCard.setBounds(180,350,160,36);
+        btnAddTransaction.setBounds(180,400,160,36);
+        btnSearchTransaction.setBounds(180,450,160,36);
 
         //add all element to the control panel
         pnlControl.add(lbCustomerID);
@@ -205,8 +218,9 @@ public class SectionCustomer extends JPanel{
         pnlControl.add(btnSearchCustomer);
         pnlControl.add(btnClearForm);
         pnlControl.add(btnUpdateCustomer);
-        pnlControl.add(btnAddTransaction);
         pnlControl.add(btnAddCard);
+        pnlControl.add(btnAddTransaction);
+        pnlControl.add(btnSearchTransaction);
 
         add(pnlControl);
         setVisible(true);

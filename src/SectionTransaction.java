@@ -36,10 +36,10 @@ public class SectionTransaction extends JPanel {
 
 
 
-    public SectionTransaction(){
+    public SectionTransaction(String queryString){
         setBounds(10,70,1080,700);
         setLayout(null);
-        constructContentPan("select * from detailed_transaction");
+        constructContentPan(queryString);
         constructFilter();
         showDetail("");
     }

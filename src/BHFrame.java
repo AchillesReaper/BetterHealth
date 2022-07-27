@@ -31,7 +31,7 @@ public class BHFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         // show layer 2 buttons
         if (e.getSource() == transactionBtn){
-            sectionPanel = new SectionTransaction();
+            sectionPanel = new SectionTransaction("select * from detailed_transaction");
             new NewMain(sectionPanel);
             this.dispose();
         }
