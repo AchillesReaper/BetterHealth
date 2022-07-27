@@ -1,10 +1,21 @@
 import javax.swing.*;
 import java.sql.*;
+import java.time.LocalDate;
+import java.io.*;
 
 public class DB_CRUD {
     public static String URL = "jdbc:mysql://localhost:3306/betterhealth";
     public static String USER = "root";
     public static String PASSWORD = "!Q@W3e4r";
+
+    public static void backupDatabase(){
+        try{
+            String batPath = "G:/\"My Drive\"/\"Database Backup\"/DB_Backup.bat";
+            Process runtime = Runtime.getRuntime().exec("cmd /c start " + batPath);
+        } catch (IOException e) {
+            System.out.println("runtime error");
+        }
+    }
 
     public static void addCustomer(Customer targetCustomer){
         try{

@@ -1,0 +1,68 @@
+BEGIN;
+
+CREATE DATABASE betterhealth;
+USE betterhealth;
+DROP TABLE IF EXISTS `customer`;
+CREATE TABLE `customer` (
+  `customerID` int NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(45) NOT NULL,
+  `lastName` varchar(45) NOT NULL,
+  `mobile` varchar(45) NOT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `address` varchar(45) DEFAULT NULL,
+  `gender` varchar(45) DEFAULT NULL,
+  `DOB_Y` varchar(4) DEFAULT NULL,
+  `DOB_M` varchar(2) DEFAULT NULL,
+  `DOB_D` varchar(2) DEFAULT NULL,
+  PRIMARY KEY (`customerID`)
+);
+
+
+DROP TABLE IF EXISTS `cards`;
+CREATE TABLE `cards` (
+  `customerID` int NOT NULL,
+  `cardID` varchar(20) NOT NULL,
+  `issuer` varchar(45) NOT NULL,
+  `coveredAmount` int NOT NULL,
+  PRIMARY KEY (`customerID`,`cardID`),
+  KEY `customer_idx` (`customerID`),
+  CONSTRAINT `customer` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE RESTRICT
+);
+
+
+DROP TABLE IF EXISTS `services`;
+CREATE TABLE `services` (
+  `serviceID` int NOT NULL AUTO_INCREMENT,
+  `serviceName` varchar(45) NOT NULL,
+  `serviceContent` varchar(255) NOT NULL,
+  `price` int NOT NULL,
+  `availability` varchar(45) NOT NULL,
+  PRIMARY KEY (`serviceID`)
+);
+
+
+DROP TABLE IF EXISTS `transactions`;
+CREATE TABLE `transactions` (
+  `transactionID` int NOT NULL AUTO_INCREMENT,
+  `year` int NOT NULL,
+  `month` int NOT NULL,
+  `day` int NOT NULL,
+  `customerID` int NOT NULL,
+  `serviceID` int NOT NULL,
+  `price` int NOT NULL,
+  `cardUsed` varchar(20) NOT NULL,
+  `cardCover` int NOT NULL,
+  `cashPmt` varchar(45) NOT NULL,
+  PRIMARY KEY (`transactionID`),
+  KEY `customerID_idx` (`customerID`),
+  KEY `serviceID_idx` (`serviceID`),
+  KEY `cardUsed_idx` (`cardUsed`),
+  CONSTRAINT `customerID` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`),
+  CONSTRAINT `serviceID` FOREIGN KEY (`serviceID`) REFERENCES `services` (`serviceID`)
+);
+
+
+DROP TABLE IF EXISTS `detailed_transaction`;
+DROP VIEW IF EXISTS `detailed_transaction`;
+CREATE VIEW `detailed_transaction` AS
+select transactions.transactionID, transactions.year, transactions.month, transactions.day, transactions.customerID, customer.firstName as patient_first_name, customer.lastName as patient_last_name, services.serviceID, services.serviceName, services.serviceContent, services.price, cards.cardID, cards.issuer, cards.coveredAmount, transactions.cashPmt FROM transactions, customer, cards, services WHERE transactions.customerID = customer.customerID and transactions.cardUsed = cards.cardID and transactions.serviceID = services.serviceID;

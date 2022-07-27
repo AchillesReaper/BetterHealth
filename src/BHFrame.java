@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
+
 public class BHFrame extends JFrame implements ActionListener {
     public JPanel menuBtnPanel;
     public JPanel sectionPanel;
@@ -14,7 +15,7 @@ public class BHFrame extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
         setTitle("Better Health Therapy Massage Centre");
-        setSize(1110, 660);
+        setSize(1115, 670);
         setResizable(false);
 
         constructMenuPanel();
@@ -45,7 +46,10 @@ public class BHFrame extends JFrame implements ActionListener {
             sectionPanel = new SectionCustomer();
             new NewMain(sectionPanel);
             this.dispose();
+        }
 
+        if (e.getSource() == backupBtn){
+            DB_CRUD.backupDatabase();
         }
 
     }

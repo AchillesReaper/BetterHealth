@@ -39,7 +39,7 @@ public class SectionService extends JPanel {
         String queryString = "select * from services WHERE availability = 'Yes'";
         Object[][] data = DB_CRUD.searchService(queryString);
         if (data.length == 0){
-            JOptionPane.showMessageDialog(null,"No Record is found.","",JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null,"On-list service is not found.","",JOptionPane.PLAIN_MESSAGE);
         }
 
         String[] colName = {"ID", "Name", "Content","Price","Available"};
@@ -83,7 +83,7 @@ public class SectionService extends JPanel {
         String queryString = "select * from services where availability = 'No'";
         Object[][] data = DB_CRUD.searchService(queryString);
         if (data.length == 0){
-            JOptionPane.showMessageDialog(null,"No Record is found.","",JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Off-list service is found.","",JOptionPane.PLAIN_MESSAGE);
         }
 
         String[] colName = {"ID", "Name", "Content","Price","Available"};

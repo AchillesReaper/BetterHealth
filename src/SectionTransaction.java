@@ -147,9 +147,9 @@ public class SectionTransaction extends JPanel {
 
         });
 
-        JButton btFilter = new JButton("Search");
+        JButton btnFilter = new JButton("Search");
 
-        btFilter.addActionListener(e -> {
+        btnFilter.addActionListener(e -> {
             String qStr = "select * from detailed_transaction";
             if (!(cbStartDate.isSelected()) && !(cbEndDate.isSelected())){
                 JOptionPane.showMessageDialog(this,"Date range is not selected","Error",JOptionPane.ERROR_MESSAGE);
@@ -193,13 +193,13 @@ public class SectionTransaction extends JPanel {
         pnlEndD.add(tfEdMonth);
         pnlEndD.add(tfEdDay);
 
-        btFilter.setBounds(600,5,80,30);
+        btnFilter.setBounds(610,10,100,20);
 
         //add to panel;
         pnlFilter.add(lbFilterTitle);
         pnlFilter.add(pnlStartD);
         pnlFilter.add(pnlEndD);
-        pnlFilter.add(btFilter);
+        pnlFilter.add(btnFilter);
 
         add(pnlFilter);
         setVisible(true);
@@ -251,11 +251,11 @@ public class SectionTransaction extends JPanel {
         contentTitle.setBounds(10,5,300,30);
         contentTitle.setFont(new Font("SansSerif", Font.BOLD, 14));
         JButton exportCsvBtn = new JButton("Export CSV");
-        exportCsvBtn.setBounds(595,10,120,30);
+        exportCsvBtn.setBounds(610,10,100,20);
 
         Object[][] data = DB_CRUD.searchTransaction(queryString);
         if (data.length == 0){
-            JOptionPane.showMessageDialog(null,"No Record is found.","",JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null,"No transaction record is found.","",JOptionPane.PLAIN_MESSAGE);
         }
         String[] colName = {"Trsc. ID", "Year", "Month", "Day", "Customer ID", "First Name", "Last Name", "Service ID", "Service", "Content", "Price", "Card", "Issuer", "Card Cover", "Cash Paid"};
         JTable tbTransaction = new JTable(data, colName);

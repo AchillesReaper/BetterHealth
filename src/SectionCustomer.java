@@ -106,7 +106,7 @@ public class SectionCustomer extends JPanel{
         btnClearForm = new JButton("Clear Form");
         btnUpdateCustomer = new JButton("Update Customer");
         btnAddTransaction = new JButton("New Transaction");
-        btnAddCard = new JButton("Add Medi Card");
+        btnAddCard = new JButton("Add Medi-Card");
         btnUpdateCustomer.setBackground(Color.red);
 
         btnAddCustomer.addActionListener(e -> {
@@ -221,11 +221,11 @@ public class SectionCustomer extends JPanel{
         JLabel contentTitle = new JLabel("Customer Information");
         contentTitle.setBounds(10,10,200,30);
         btnExportCsv = new JButton("Export CSV");
-        btnExportCsv.setBounds(595,10,120,30);
+        btnExportCsv.setBounds(610,10,100,20);
 
         Object[][] data = DB_CRUD.searchCustomer(queryString);
         if (data.length == 0){
-            JOptionPane.showMessageDialog(null,"No Record is found.","",JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null,"No customer record is found.","",JOptionPane.PLAIN_MESSAGE);
         }
         String[] colName = {"Cus. ID", "First Name", "Last Name","Mobile","email","Address","Gender","DOB_Y","DOB_M","DOB_D"};
         tbCustomer = new JTable(data, colName);
