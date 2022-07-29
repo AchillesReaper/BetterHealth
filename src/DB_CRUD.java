@@ -10,7 +10,7 @@ public class DB_CRUD {
 
     public static void backupDatabase(){
         try{
-            String batPath = "G:/\"My Drive\"/\"Database Backup\"/DB_Backup.bat";
+            String batPath = "G:/我的云端硬盘/\"Database Backup\"/DB_backup_cn.bat";
             Process runtime = Runtime.getRuntime().exec("cmd /c start " + batPath);
         } catch (IOException e) {
             System.out.println("runtime error");
