@@ -286,7 +286,7 @@ public class Pop_newTrsc {
         tfServiceName.setEditable(false);
         tfServicePrice.setEditable(false);
         tfMediCardUsed.setEditable(false);
-        tfCoveredAmount.setEditable(false);
+        tfCoveredAmount.setEditable(true);
         tfCashPaid.setEditable(false);
 
         JButton btnAddTransaction = new JButton("Add Transaction");

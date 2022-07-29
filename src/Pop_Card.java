@@ -50,6 +50,11 @@ public class Pop_Card {
         Object[][] data = DB_CRUD.searchCard(queryString);
         if (data.length == 0){
             JOptionPane.showMessageDialog(null, "This customer does not have a medi card yet","Note!",JOptionPane.INFORMATION_MESSAGE);
+            mediCard = new MediCard(customerID,"$$$", "Cash","0");
+            DB_CRUD.addCardToDB(mediCard);
+            constructContentPanel(customerID);
+            frame.add(pnlContent);
+            frame.setVisible(true);
         }
         JTable cardTable = new JTable(data,tableTitle);
         cardTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
