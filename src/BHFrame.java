@@ -29,9 +29,9 @@ public class BHFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // show layer 2 buttons
-        if (e.getSource() == transactionBtn){
-            sectionPanel = new SectionTransaction("select * from detailed_transaction");
+
+        if (e.getSource() == customerBtn){
+            sectionPanel = new SectionCustomer();
             new NewMain(sectionPanel);
             this.dispose();
         }
@@ -42,8 +42,8 @@ public class BHFrame extends JFrame implements ActionListener {
             this.dispose();
         }
 
-        if (e.getSource() == customerBtn){
-            sectionPanel = new SectionCustomer();
+        if (e.getSource() == transactionBtn){
+            sectionPanel = new SectionTransaction( "");
             new NewMain(sectionPanel);
             this.dispose();
         }
@@ -60,9 +60,9 @@ public class BHFrame extends JFrame implements ActionListener {
         menuBtnPanel.setLayout(new FlowLayout(FlowLayout.LEFT,20,10));
         menuBtnPanel.setBackground(Color.lightGray);
 
-        transactionBtn = new JButton("Transaction");
-        serviceBtn = new JButton("Service");
         customerBtn = new JButton("Customer");
+        serviceBtn = new JButton("Service");
+        transactionBtn = new JButton("Transaction");
         backupBtn = new JButton("Backup Data");
 
         transactionBtn.setFont(new Font("Comic Sans", Font.BOLD, 18));
@@ -79,9 +79,9 @@ public class BHFrame extends JFrame implements ActionListener {
         customerBtn.addActionListener(this);
         backupBtn.addActionListener(this);
 
-        menuBtnPanel.add(transactionBtn);
-        menuBtnPanel.add(serviceBtn);
         menuBtnPanel.add(customerBtn);
+        menuBtnPanel.add(serviceBtn);
+        menuBtnPanel.add(transactionBtn);
         menuBtnPanel.add(backupBtn);
     }
 

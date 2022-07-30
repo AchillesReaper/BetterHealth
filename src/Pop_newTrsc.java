@@ -19,7 +19,7 @@ public class Pop_newTrsc {
     public String serviceContent = "";
     public String servicePrice = "";
     public String cardID = "";
-    public String cardCover = "";
+    public String cardCover = "0";
     public String cashPayment = "";
 
     public String customerID, firstName, lastName;
@@ -201,7 +201,7 @@ public class Pop_newTrsc {
         lbMediTitle.setFont(new Font("SansSerif", Font.BOLD, 12));
         lbMediTitle.setBounds(10,0,200,30);
 
-        String[] tableTitle = {"Cstm ID", "Card ID", "Issuer","Covered $"};
+        String[] tableTitle = {"Cstm ID", "Card ID", "Issuer"};
         String queryString = "select * from cards where customerID = '" + customerID + "'";
         Object[][] data = DB_CRUD.searchCard(queryString);
         if (data.length == 0){
@@ -218,7 +218,6 @@ public class Pop_newTrsc {
                 super.mouseClicked(e);
                 int row = tbCard.getSelectedRow();
                 cardID = tbCard.getModel().getValueAt(row,1).toString();
-                cardCover = tbCard.getModel().getValueAt(row,3).toString();
                 constPreviewPanel();
             }
         });

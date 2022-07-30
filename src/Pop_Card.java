@@ -1,21 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Pop_Card {
-    public JFrame frame = new JFrame("Add Medi Card for Customer");
-    public JPanel pnlLeft = new JPanel();
-    public JPanel pnlRight = new JPanel();
-    public JPanel pnlContent;
-
+    public JFrame frame = new JFrame("Add Health Fund for Customer");
+    public JPanel pnlContent, pnlLeft, pnlRight;
     public JTextField tfCustomerID = new JTextField();
     public JTextField tfFirstName = new JTextField();
     public JTextField tfLastName = new JTextField();
     public JTextField tfCardID = new JTextField();
     public JTextField tfIssuer = new JTextField();
-    public JTextField tfCoveredAmt = new JTextField();
+    public JTable tbCard;
     public MediCard mediCard;
 
-//    public Object[][] data;
+
 
     public Pop_Card(String customerID, String firstName, String lastName){
         frame.setBounds(0,0,520,420);
@@ -26,50 +25,10 @@ public class Pop_Card {
         constructRightPanel(customerID);
         constructContentPanel(customerID);
 
-        frame.add(pnlLeft);
-        frame.add(pnlRight);
-        frame.add(pnlContent);
-        frame.setVisible(true);
-    }
-
-    public void constructContentPanel(String customerID){
-        if (pnlContent != null){
-            frame.remove(pnlContent);
-        }
-        pnlContent = new JPanel();
-        String queryString = "select * from cards where customerID = '" + customerID + "'";
-        pnlContent.setBounds(10,10,490,180);
-        pnlContent.setLayout(null);
-        pnlContent.setBackground(Color.lightGray);
-
-        JLabel titleLabel = new JLabel("Cards of the customer");
-        titleLabel.setBounds(10,10,200,30);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 12));
-
-        String[] tableTitle = {"Customer ID", "Card ID", "Issuer","Covered Amount"};
-        Object[][] data = DB_CRUD.searchCard(queryString);
-        if (data.length == 0){
-            JOptionPane.showMessageDialog(null, "This customer does not have a medi card yet","Note!",JOptionPane.INFORMATION_MESSAGE);
-            mediCard = new MediCard(customerID,"$$$", "Cash","0");
-            DB_CRUD.addCardToDB(mediCard);
-            constructContentPanel(customerID);
-            frame.add(pnlContent);
-            frame.setVisible(true);
-        }
-        JTable cardTable = new JTable(data,tableTitle);
-        cardTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
-        cardTable.setFont(new Font("SansSerif", Font.PLAIN, 12));
-
-        JScrollPane scrollPan = new JScrollPane(cardTable);
-        scrollPan.setBounds(10,40,470,120);
-        cardTable.setFillsViewportHeight(true);
-
-        pnlContent.add(titleLabel);
-        pnlContent.add(scrollPan);
-
     }
 
     public void constructLeftPanel(String customerID, String firstName, String lastName){
+        pnlLeft = new JPanel();
         pnlLeft.setBounds(10,200,240,180);
         pnlLeft.setLayout(null);
         pnlLeft.setBackground(Color.lightGray);
@@ -103,8 +62,16 @@ public class Pop_Card {
         pnlLeft.add(tfFirstName);
         pnlLeft.add(lastNameLabel);
         pnlLeft.add(tfLastName);
+
+        frame.add(pnlLeft);
+        frame.setVisible(true);
     }
+
     public void constructRightPanel(String customerID){
+        if(pnlRight != null){
+            frame.remove(pnlRight);
+        }
+        pnlRight = new JPanel();
         pnlRight.setBounds(260,200,240,180);
         pnlRight.setLayout(null);
         pnlRight.setBackground(Color.lightGray);
@@ -112,39 +79,105 @@ public class Pop_Card {
         JLabel titleLabel = new JLabel("New Card Information");
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 12));
 
-        JLabel issuerLabel = new JLabel("Card Issuer:");
-        JLabel cardIdLabel = new JLabel("Card ID:");
-        JLabel cAmtLabel = new JLabel("Covered Amt:");
+        JLabel lbIssuer = new JLabel("Card Issuer:");
+        JLabel lbCardID = new JLabel("Card ID:");
 
-        JButton addNewCard = new JButton("Add Card");
-        addNewCard.addActionListener(e -> {
+        JButton btnAddCard = new JButton("Add Card");
+        btnAddCard.addActionListener(e -> {
             if(newCardValidation(customerID)){
-            DB_CRUD.addCardToDB(mediCard);
+                DB_CRUD.addCardToDB(mediCard);
             }
             constructContentPanel(customerID);
+            constructRightPanel(customerID);
+            frame.add(pnlRight);
             frame.add(pnlContent);
             frame.setVisible(true);
 
         });
 
+        JButton btnDeleteCard = new JButton("Delete Card");
+        btnDeleteCard.addActionListener(e -> {
+            if (tfCardID.getText().length() == 0){
+                JOptionPane.showMessageDialog(null,"Please select a card","Reminder",JOptionPane.INFORMATION_MESSAGE);
+            } else if (tfCardID.getText().equals("cash")){
+                JOptionPane.showMessageDialog(null,"Cash is a default payment method.\nCannot be deleted!","Reminder",JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                int input = JOptionPane.showConfirmDialog(null,"Confirm delete card? (ID = "+tfCardID.getText()+")?");
+                if (input == 0){
+                    DB_CRUD.deleteCard(customerID, tfCardID.getText());
+                    constructContentPanel(customerID);
+                    frame.add(pnlContent);
+                    frame.setVisible(true);
+                }
+            }
+        });
+
         titleLabel.setBounds(10,10,160,30);
-        issuerLabel.setBounds(10,40,100,30);
-        cardIdLabel.setBounds(10,70,100,30);
-        cAmtLabel.setBounds(10,100,100,30);
+        lbIssuer.setBounds(10,40,100,30);
+        lbCardID.setBounds(10,70,100,30);
         tfIssuer.setBounds(110,40,120,30);
         tfCardID.setBounds(110,70,120,30);
-        tfCoveredAmt.setBounds(110,100,120,30);
-        addNewCard.setBounds(60,140,120,30);
+        btnAddCard.setBounds(60,110,120,30);
+        btnDeleteCard.setBounds(60,140,120,30);
+
 
         pnlRight.add(titleLabel);
-        pnlRight.add(issuerLabel);
+        pnlRight.add(lbIssuer);
+        pnlRight.add(lbCardID);
         pnlRight.add(tfIssuer);
-        pnlRight.add(cardIdLabel);
         pnlRight.add(tfCardID);
-        pnlRight.add(cAmtLabel);
-        pnlRight.add(tfCoveredAmt);
-        pnlRight.add(addNewCard);
+        pnlRight.add(btnAddCard);
+        pnlRight.add(btnDeleteCard);
 
+        frame.add(pnlRight);
+        frame.setVisible(true);
+    }
+
+    public void constructContentPanel(String customerID){
+        if (pnlContent != null){
+            frame.remove(pnlContent);
+        }
+        pnlContent = new JPanel();
+        String queryString = "select * from cards where customerID = '" + customerID + "'";
+        pnlContent.setBounds(10,10,490,180);
+        pnlContent.setLayout(null);
+        pnlContent.setBackground(Color.lightGray);
+
+        JLabel titleLabel = new JLabel("Cards of the customer");
+        titleLabel.setBounds(10,10,200,30);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 12));
+
+        String[] tableTitle = {"Customer ID", "Card ID", "Issuer"};
+        Object[][] data = DB_CRUD.searchCard(queryString);
+        if (data.length == 0){
+            mediCard = new MediCard(customerID,"cash", "CASH");
+            DB_CRUD.addCardToDB(mediCard);
+            data = DB_CRUD.searchCard(queryString);
+        }
+        tbCard = new JTable(data,tableTitle);
+        tbCard.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
+        tbCard.setFont(new Font("SansSerif", Font.PLAIN, 12));
+
+        JScrollPane scpCard = new JScrollPane(tbCard);
+        scpCard.setBounds(10,40,470,120);
+        tbCard.setFillsViewportHeight(true);
+        tbCard.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                int row = tbCard.getSelectedRow();
+//                String customerID = (tbCard.getModel().getValueAt(row,0)).toString();
+                tfCardID.setText((tbCard.getModel().getValueAt(row,1)).toString());
+                tfIssuer.setText((tbCard.getModel().getValueAt(row,2)).toString());
+                constructRightPanel(customerID);
+            }
+        });
+
+        pnlContent.add(titleLabel);
+        pnlContent.add(scpCard);
+
+        frame.add(pnlContent);
+        frame.setVisible(true);
     }
 
     public Boolean newCardValidation(String customerID){
@@ -152,7 +185,8 @@ public class Pop_Card {
             JOptionPane.showMessageDialog(null,"Please check following input:\nCard ID \nIssuer","Input Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }else{
-            mediCard = new MediCard(customerID,tfCardID.getText(), tfIssuer.getText(),tfCoveredAmt.getText());
+            mediCard = new MediCard(customerID,tfCardID.getText(), tfIssuer.getText().toUpperCase());
+            System.out.println(tfIssuer.getText().toUpperCase());
             return true;
         }
     }

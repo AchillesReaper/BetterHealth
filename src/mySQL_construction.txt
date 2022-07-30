@@ -23,8 +23,7 @@ CREATE TABLE `cards` (
   `customerID` int NOT NULL,
   `cardID` varchar(20) NOT NULL,
   `issuer` varchar(45) NOT NULL,
-  `coveredAmount` int NOT NULL,
-  PRIMARY KEY (`customerID`,`cardID`),
+  PRIMARY KEY (`cardID`),
   KEY `customer_idx` (`customerID`),
   CONSTRAINT `customer` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE RESTRICT
 );
@@ -57,12 +56,20 @@ CREATE TABLE `transactions` (
   KEY `customerID_idx` (`customerID`),
   KEY `serviceID_idx` (`serviceID`),
   KEY `cardUsed_idx` (`cardUsed`),
-  CONSTRAINT `customerID` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`),
-  CONSTRAINT `serviceID` FOREIGN KEY (`serviceID`) REFERENCES `services` (`serviceID`)
+  CONSTRAINT `customerID` FOREIGN KEY (`customerID`) REFERENCES `customer` (`customerID`) ON DELETE RESTRICT,
+  CONSTRAINT `serviceID` FOREIGN KEY (`serviceID`) REFERENCES `services` (`serviceID`) ON DELETE RESTRICT,
+  CONSTRAINT `cardUsed` FOREIGN KEY (`cardUsed`) REFERENCES `cards` (`cardID`) ON DELETE RESTRICT
 );
 
 
 DROP TABLE IF EXISTS `detailed_transaction`;
 DROP VIEW IF EXISTS `detailed_transaction`;
 CREATE VIEW `detailed_transaction` AS
-select transactions.transactionID, transactions.year, transactions.month, transactions.day, transactions.customerID, customer.firstName as patient_first_name, customer.lastName as patient_last_name, services.serviceID, services.serviceName, services.serviceContent, services.price, cards.cardID, cards.issuer, cards.coveredAmount, transactions.cashPmt FROM transactions, customer, cards, services WHERE transactions.customerID = customer.customerID and transactions.cardUsed = cards.cardID and transactions.serviceID = services.serviceID and transactions.customerID = cards.customerID;
+select transactions.transactionID, transactions.year, transactions.month, transactions.day, transactions.customerID, customer.firstName as patient_first_name, customer.lastName as patient_last_name, services.serviceID, services.serviceName, services.serviceContent, services.price, cards.cardID, cards.issuer, transactions.cardCover, transactions.cashPmt FROM transactions, customer, cards, services WHERE transactions.customerID = customer.customerID and transactions.cardUsed = cards.cardID and transactions.serviceID = services.serviceID and transactions.customerID = cards.customerID;
+
+*** sample below ***
+
+INSERT INTO `customer` VALUES (9,'Tes','TEST','0343420180','44456655@QQ.COM','','','','',''),(10,'Test','Test','0424710000','','','','','',''),(11,'Man Ying','AU','0430543400','','27A Smiths Ave Hurstville NSW 2220','Female','1969','2','5'),(12,'Kin Shing','AU','0425309836','','27A Smiths Ave Hurstville NSW 2220','Not Specified','1963','5','21'),(13,'Nafeez','ABRAR','0492371971','','807 1D Greenbank St Hurstville NSW 2220','Male','1989','9','4');
+INSERT INTO `services` VALUES (1,'Neck、Shoulder','20 mins',35,'Yes'),(2,'Head、Neck、Shoulder','30 mins',45,'Yes'),(3,'Upper Body','40 mins',55,'Yes'),(4,'Back and Legs','50 mins',65,'Yes'),(5,'Whole Body','60 mins',75,'Yes'),(6,'Whole Body、Reflexology','90 mins',105,'Yes'),(7,'Extension Whole Body','120 mins',135,'Yes'),(8,'Feet Reflexology','30 mins',45,'Yes'),(9,'Feet Reflexology&Herbal Spa','45 mins',60,'Yes'),(10,'Feet Reflexology&Herbal Spa','60 mins',75,'Yes'),(11,'Feet Reflexology&Detox Spa','90 mins',105,'Yes'),(12,'Hot Stone-Neck、Shoulder、Back','30 mins',50,'Yes'),(13,'Hot Stone-Back、Legs','40 mins',60,'Yes'),(14,'Hot Stone-Whole Body','60 mins',85,'Yes'),(15,'Fire Cupping','20 mins',35,'Yes'),(16,'Dry Cupping','20 mins',25,'Yes'),(17,'Ear Candling&Head Massage','30 mins',50,'Yes'),(18,'Lon Cleanse Detox','30 mins',30,'Yes'),(19,'Gua Sha','30 mins',40,'Yes'),(20,'Moxibustion','60 mins',85,'Yes'),(21,'Lymphatic Drainage Massage','60 mins',85,'Yes'),(22,'Lymphatic Drainage Massage','90 mins',115,'Yes'),(23,'Deep Cleanse Facial','60 mins',85,'Yes'),(24,'Ultrasound Firming Facial','80 mins',105,'Yes');
+INSERT INTO `cards` VALUES (9,'123456','aia'),(9,'999876','axa'),(10,'332211','Bupa'),(11,'0000_1','Bupa'),(12,'0000_2','Bupa'),(13,'0000_3','BUPA');
+INSERT INTO `transactions` VALUES (1,2021,2,2,9,1,60,'123456',1,'59'),(2,2022,1,2,9,1,60,'999876',30,'30'),(3,2022,5,4,10,3,120,'332211',15,'105'),(4,2022,1,1,9,2,80,'123456',1,'79'),(5,2022,6,15,11,3,55,'0000_1',20,'35'),(6,2022,6,15,12,3,55,'0000_2',0,'55'),(7,2021,11,8,13,5,75,'0000_3',0,'75'),(8,2022,1,26,13,5,75,'0000_3',0,'75'),(9,2022,2,2,13,5,75,'0000'_3,0,'75'),(10,2022,2,7,13,5,75,'0000_3',0,'75'),(11,2022,2,28,13,7,135,'0000_3',50,'85');
