@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
@@ -105,7 +103,7 @@ public class SectionCustomer extends JPanel{
         btnSearchCustomer = new JButton("Search Customer");
         btnClearForm = new JButton("Clear Form");
         btnUpdateCustomer = new JButton("Update Customer");
-        btnAddCard = new JButton("Add Medi-Card");
+        btnAddCard = new JButton("Add Health Fund");
         btnAddTransaction = new JButton("New Transaction");
         btnSearchTransaction = new JButton("Search Transaction");
 
@@ -165,7 +163,7 @@ public class SectionCustomer extends JPanel{
             if (customerID.length() == 0){
                 JOptionPane.showMessageDialog(null,"Please select a customer","Reminder",JOptionPane.INFORMATION_MESSAGE);
             }else{
-                SectionTransaction sectionInput = new SectionTransaction("select * from detailed_transaction where customerID = "+customerID);
+                SectionTransaction sectionInput = new SectionTransaction(customerID);
                 new NewMain(sectionInput);
             }
         });
@@ -264,9 +262,7 @@ public class SectionCustomer extends JPanel{
         });
 
         
-        btnExportCsv.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        btnExportCsv.addActionListener(e -> {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogTitle("Choose Save Destination");
 
@@ -295,8 +291,7 @@ public class SectionCustomer extends JPanel{
                         JOptionPane.showMessageDialog(btnExportCsv, "ERROR","ERROR MESSAGE",JOptionPane.ERROR_MESSAGE);
                     }
                 }
-            }
-        });
+            });
         scpCustomer = new JScrollPane(tbCustomer);
         scpCustomer.setBounds(10,40,700,500);
         tbCustomer.setFillsViewportHeight(true);

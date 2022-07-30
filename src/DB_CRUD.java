@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.sql.*;
-import java.time.LocalDate;
 import java.io.*;
 
 public class DB_CRUD {
@@ -10,7 +9,7 @@ public class DB_CRUD {
 
     public static void backupDatabase(){
         try{
-            String batPath = "G:/\"My Drive\"/\"Database Backup\"/DB_Backup.bat";
+            String batPath = "G:/我的云端硬盘/\"Database Backup\"/DB_backup_cn.bat";
             Process runtime = Runtime.getRuntime().exec("cmd /c start " + batPath);
         } catch (IOException e) {
             System.out.println("runtime error");
@@ -108,11 +107,10 @@ public class DB_CRUD {
         try{
             Connection connection = DriverManager.getConnection(URL,USER,PASSWORD);
             PreparedStatement pst = connection.prepareStatement(
-                    "INSERT INTO cards VALUES(?,?,?,?)" );
+                    "INSERT INTO cards VALUES(?,?,?)" );
             pst.setString(1, mediCard.customerID);
             pst.setString(2, mediCard.cardID);
             pst.setString(3, mediCard.issuer);
-            pst.setString(4, mediCard.coveredAmount);
 
             pst.executeUpdate();
 
@@ -134,13 +132,12 @@ public class DB_CRUD {
             rs.last();
             int row_num = rs.getRow();
             rs.beforeFirst();
-            Object[][] data = new Object[row_num][4];
+            Object[][] data = new Object[row_num][3];
             int count = 0;
             while (rs.next()){
                 data[count][0] = rs.getString("customerID");
                 data[count][1] = rs.getString("cardID");
                 data[count][2] = rs.getString("issuer");
-                data[count][3] = rs.getString("coveredAmount");
                 count ++;
             }
             rs.close();
@@ -149,6 +146,24 @@ public class DB_CRUD {
             return data;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void deleteCard(String customerID, String cardID) {
+        try {
+            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            PreparedStatement pst = connection.prepareStatement(
+                    "DELETE FROM `betterhealth`.`cards` WHERE (`customerID` = ?) and (`cardID` = ?)");
+            pst.setString(1, customerID);
+            pst.setString(2, cardID);
+            pst.executeUpdate();
+            pst.close();
+            connection.close();
+
+            JOptionPane.showMessageDialog(null, "Card (ID = " + cardID + ") is deleted", "Note", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Card (ID = " + cardID + ") cannot be deleted.\nSome transactions may be linked to it.", "Note", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -279,7 +294,7 @@ public class DB_CRUD {
                 data[count][10] = rs.getString("price");
                 data[count][11] = rs.getString("cardID");
                 data[count][12] = rs.getString("issuer");
-                data[count][13] = rs.getString("coveredAmount");
+                data[count][13] = rs.getString("cardCover");
                 data[count][14] = rs.getString("cashPmt");
                 count ++;
             }

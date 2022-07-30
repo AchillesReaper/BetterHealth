@@ -16,7 +16,7 @@ public class SectionTransaction extends JPanel {
     public String dateY = "";
     public String dateM = "";
     public String dateD = "";
-    public String customerID = "";
+    public String customerID;
     public String firstName = "";
     public String lastName = "";
     public String serviceID = "";
@@ -27,6 +27,7 @@ public class SectionTransaction extends JPanel {
     public String cardIssuer = "";
     public String cardCover = "";
     public String cashPayment = "";
+    public String queryString = "select * from detailed_transaction";
 
 
     public String[] listStartDate = new String[3];
@@ -36,10 +37,17 @@ public class SectionTransaction extends JPanel {
 
 
 
-    public SectionTransaction(String queryString){
+    public SectionTransaction(String customerID){
+        this.customerID = customerID;
+
         setBounds(10,70,1080,700);
         setLayout(null);
-        constructContentPan(queryString);
+
+        if (customerID.length() > 0){
+            constructContentPan(queryString + " WHERE customerID = " + this.customerID);
+        }else{
+            constructContentPan(queryString);
+        }
         constructFilter();
         showDetail("");
     }
@@ -151,16 +159,19 @@ public class SectionTransaction extends JPanel {
         JButton btnFilter = new JButton("Search");
 
         btnFilter.addActionListener(e -> {
-            String qStr = "select * from detailed_transaction";
+//            String qStr = "select * from detailed_transaction WHERE ";
+            String condition1 = "";
+            String condition2 = "";
+            String ftCondition;
             if (!(cbStartDate.isSelected()) && !(cbEndDate.isSelected())){
                 JOptionPane.showMessageDialog(this,"Date range is not selected","Error",JOptionPane.ERROR_MESSAGE);
-            } else {
+            } else { //this scenario is triggered when one of the data filter box is ticked
                 if (cbStartDate.isSelected()){
                     listStartDate[0] = tfSdYear.getText();
                     listStartDate[1] = tfSdMonth.getText();
                     listStartDate[2] = tfSdDay.getText();
                     if (inputValidation(listStartDate, "Start Date")){
-                        qStr += generateQueryStringToken("S");
+                        condition1 = generateQueryStringToken("S");
                     }
                 }
 
@@ -169,9 +180,27 @@ public class SectionTransaction extends JPanel {
                     listEndDate[1] = tfEdMonth.getText();
                     listEndDate[2] = tfEdDay.getText();
                     if (inputValidation(listEndDate, "End Date")){
-                        qStr += generateQueryStringToken("E");
+                        condition2= generateQueryStringToken("E");
                     }
                 }
+
+                //check if starting date and end date is ticked, all these conditions are grouped into one statement
+                if (condition1.length() > 0 && condition2.length() > 0){
+                    ftCondition = condition1 + " and " + condition2;
+                } else if (condition1.length() > 0) {
+                    ftCondition = condition1;
+                } else {
+                    ftCondition = condition2;
+                }
+
+                //check if this session is about one client, if yes, all transactions are limited to this client.
+                if (customerID.length()>0){
+                    ftCondition += " and customerID = " + customerID;
+                }
+
+                String qStr = queryString +" WHERE " + ftCondition;
+
+                System.out.println(qStr);
 
                 constructContentPan(qStr);
             }
@@ -207,14 +236,26 @@ public class SectionTransaction extends JPanel {
     }
     public String generateQueryStringToken(String token){
         String qsToken = "";
+        int ftYear;
+        int ftMonth;
+        int ftDay;
 
         if (token.equals("S")){
-            qsToken += " WHERE year >= "+listStartDate[0]+" and month >= "+listStartDate[1]+" and day >= "+listStartDate[2];
+//            qsToken += " year >= "+listStartDate[0]+" and month >= "+listStartDate[1]+" and day >= "+listStartDate[2];
+            ftYear = Integer.parseInt(listStartDate[0]);
+            ftMonth = Integer.parseInt(listStartDate[1]);
+            ftDay = Integer.parseInt(listStartDate[2]);
+            qsToken += "(year*10000 + month*100 + day) >= "+(ftYear*10000 + ftMonth*100 + ftDay);
         }
         if (token.equals("E")){
-            qsToken += " WHERE year >= "+listEndDate[0]+" and month >= "+listEndDate[1]+" and day >= "+listEndDate[2];
-        }
+//            qsToken += " year >= "+listEndDate[0]+" and month >= "+listEndDate[1]+" and day >= "+listEndDate[2];
 
+            ftYear = Integer.parseInt(listEndDate[0]);
+            ftMonth = Integer.parseInt(listEndDate[1]);
+            ftDay = Integer.parseInt(listEndDate[2]);
+            qsToken += "(year*10000 + month*100 + day) <= "+(ftYear*10000 + ftMonth*100 + ftDay);
+        }
+        System.out.println(qsToken);
         return qsToken;
     }
 
@@ -244,6 +285,7 @@ public class SectionTransaction extends JPanel {
     }
 
     public void constructContentPan(String queryString){
+        if(pnlContent != null){remove(pnlContent);}
         pnlContent = new JPanel(null);
         pnlContent.setBounds(0,75,720,475);
         pnlContent.setBackground(Color.lightGray);
@@ -338,8 +380,6 @@ public class SectionTransaction extends JPanel {
     }
 
     public  void showDetail(String transactionID){
-        System.out.println(transactionID);
-        System.out.println("IDlength = " + transactionID.length());
         if (pnlDetail != null){remove(pnlDetail);}
         pnlDetail = new JPanel(null);
         pnlDetail.setBackground(Color.lightGray);
@@ -348,11 +388,9 @@ public class SectionTransaction extends JPanel {
         JLabel lbTrscDetail = new JLabel();
         JButton btnDeleteTransaction = new JButton();
         if (transactionID.length() == 0){
-            System.out.println("if triggered");
             lbTrscDetail.setText("Transaction Detail");
             btnDeleteTransaction.setText("Delete Transaction");
         }else{
-            System.out.println("else triggered");
             lbTrscDetail.setText("Transaction Detail: ID = "+transactionID);
             btnDeleteTransaction.setText("Delete Transaction ID = "+transactionID);
         }

@@ -1,11 +1,10 @@
 public class MediCard {
-    public String customerID, cardID, issuer, coveredAmount;
+    public String customerID, cardID, issuer;
 
-    public MediCard(String customerID, String cardID, String issuer, String coveredAmount){
+    public MediCard(String customerID, String cardID, String issuer){
         this.customerID = customerID;
         this.cardID = cardID;
         this.issuer = issuer;
-        this.coveredAmount = coveredAmount;
     }
 
 }
