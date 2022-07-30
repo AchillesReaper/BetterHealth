@@ -7,6 +7,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SectionTransaction extends JPanel {
     public JPanel pnlDetail, pnlContent, pnlFilter;
@@ -334,10 +336,15 @@ public class SectionTransaction extends JPanel {
         });
 
         exportCsvBtn.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
+            JFileChooser fileChooser = new JFileChooser("G:/我的云端硬盘/\"Database Backup\"/Report");
             fileChooser.setDialogTitle("Choose Save Destination");
-            fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("CSV Only","CSV"));
-            fileChooser.setAcceptAllFileFilterUsed(true);
+            FileNameExtensionFilter filter=new FileNameExtensionFilter("*.csv", "csv");
+            fileChooser.setFileFilter(filter);
+
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String dateStamp = formatter.format(date);
+            fileChooser.setSelectedFile(new File("transaction_"+dateStamp));
 
             int userSelection  = fileChooser.showSaveDialog(exportCsvBtn);
             if (userSelection == JFileChooser.APPROVE_OPTION){
@@ -361,6 +368,10 @@ public class SectionTransaction extends JPanel {
                     JOptionPane.showMessageDialog(exportCsvBtn, "SUCCESSFULLY SAVED","INFORMATION",JOptionPane.INFORMATION_MESSAGE);
                     bufferedWriter.close();
                     fileWriter.close();
+                    if (!fileToSave.getName().endsWith(".csv")) {
+                        fileToSave=new File(fileToSave.getPath()+".csv");
+                        System.out.println(fileToSave.getPath());
+                    }
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(exportCsvBtn, "ERROR","ERROR MESSAGE",JOptionPane.ERROR_MESSAGE);
                 }

@@ -5,10 +5,10 @@ import java.awt.event.ActionListener;
 
 
 
-public class BHFrame extends JFrame implements ActionListener {
+public class BHFrame extends JFrame{
     public JPanel menuBtnPanel;
     public JPanel sectionPanel;
-    public JButton transactionBtn, serviceBtn, customerBtn, backupBtn;
+    public JButton btnTransaction, btnService, btnCustomer, btnBackup;
 
 
     BHFrame(JPanel sectionInsert){
@@ -27,63 +27,51 @@ public class BHFrame extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-        if (e.getSource() == customerBtn){
-            sectionPanel = new SectionCustomer();
-            new NewMain(sectionPanel);
-            this.dispose();
-        }
-
-        if (e.getSource() == serviceBtn){
-            sectionPanel = new SectionService();
-            new NewMain(sectionPanel);
-            this.dispose();
-        }
-
-        if (e.getSource() == transactionBtn){
-            sectionPanel = new SectionTransaction( "");
-            new NewMain(sectionPanel);
-            this.dispose();
-        }
-
-        if (e.getSource() == backupBtn){
-            DB_CRUD.backupDatabase();
-        }
-
-    }
-
     public void constructMenuPanel(){
         menuBtnPanel = new JPanel();
         menuBtnPanel.setBounds(10,10,1080,56);
         menuBtnPanel.setLayout(new FlowLayout(FlowLayout.LEFT,20,10));
         menuBtnPanel.setBackground(Color.lightGray);
 
-        customerBtn = new JButton("Customer");
-        serviceBtn = new JButton("Service");
-        transactionBtn = new JButton("Transaction");
-        backupBtn = new JButton("Backup Data");
+        btnCustomer = new JButton("Customer");
+        btnService = new JButton("Service");
+        btnTransaction = new JButton("Transaction");
+        btnBackup = new JButton("Backup Data");
 
-        transactionBtn.setFont(new Font("Comic Sans", Font.BOLD, 18));
-        transactionBtn.setPreferredSize(new Dimension(160,36));
-        serviceBtn.setFont(new Font("Comic Sans", Font.BOLD, 18));
-        serviceBtn.setPreferredSize(new Dimension(160,36));
-        customerBtn.setFont(new Font("Comic Sans", Font.BOLD, 18));
-        customerBtn.setPreferredSize(new Dimension(160,36));
-        backupBtn.setFont(new Font("Comic Sans", Font.BOLD, 18));
-        backupBtn.setPreferredSize(new Dimension(160,36));
+        btnCustomer.addActionListener(e -> {
+            sectionPanel = new SectionCustomer();
+            new NewMain(sectionPanel);
+            this.dispose();
+        });
 
-        transactionBtn.addActionListener(this);
-        serviceBtn.addActionListener(this);
-        customerBtn.addActionListener(this);
-        backupBtn.addActionListener(this);
+        btnService.addActionListener(e -> {
+            sectionPanel = new SectionService();
+            new NewMain(sectionPanel);
+            this.dispose();
+        });
 
-        menuBtnPanel.add(customerBtn);
-        menuBtnPanel.add(serviceBtn);
-        menuBtnPanel.add(transactionBtn);
-        menuBtnPanel.add(backupBtn);
+        btnTransaction.addActionListener(e -> {
+            sectionPanel = new SectionTransaction( "");
+            new NewMain(sectionPanel);
+            this.dispose();
+        });
+
+        btnBackup.addActionListener( e -> {
+            DB_CRUD.backupDatabase();
+        });
+
+        btnTransaction.setFont(new Font("Comic Sans", Font.BOLD, 18));
+        btnTransaction.setPreferredSize(new Dimension(160,36));
+        btnService.setFont(new Font("Comic Sans", Font.BOLD, 18));
+        btnService.setPreferredSize(new Dimension(160,36));
+        btnCustomer.setFont(new Font("Comic Sans", Font.BOLD, 18));
+        btnCustomer.setPreferredSize(new Dimension(160,36));
+        btnBackup.setFont(new Font("Comic Sans", Font.BOLD, 18));
+        btnBackup.setPreferredSize(new Dimension(160,36));
+
+        menuBtnPanel.add(btnCustomer);
+        menuBtnPanel.add(btnService);
+        menuBtnPanel.add(btnTransaction);
+        menuBtnPanel.add(btnBackup);
     }
-
-
 }

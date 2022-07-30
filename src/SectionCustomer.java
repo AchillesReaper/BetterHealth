@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -6,8 +7,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class SectionCustomer extends JPanel{
     public JPanel pnlControl = new JPanel();
@@ -263,35 +266,48 @@ public class SectionCustomer extends JPanel{
 
         
         btnExportCsv.addActionListener(e -> {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Choose Save Destination");
+//            JFileChooser fileChooser = new JFileChooser("G:/My Drive/Database Backup/Report");
 
-                int userSelection  = fileChooser.showSaveDialog(btnExportCsv);
-                if (userSelection == JFileChooser.APPROVE_OPTION){
-                    File fileToSave = fileChooser.getSelectedFile();
-                    try{
-                        FileWriter fileWriter = new FileWriter(fileToSave);
-                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                        bufferedWriter.write("customerID,firstName,lastName,mobile,email,address,gender,DOB_Y,DOB_M,DOB_D");
-                        bufferedWriter.newLine();
-                        for (int i = 0; i < data.length; i++){
-                            for (int j = 0; j < 10; j++){
-                                if(j != 9){
-                                    bufferedWriter.write(data[i][j] + ",");
-                                }else{
-                                    bufferedWriter.write(data[i][j] + "");
-                                }
+            JFileChooser fileChooser = new JFileChooser("G:/我的云端硬盘/Database Backup/Report");
+            fileChooser.setDialogTitle("Choose Save Destination");
+            FileNameExtensionFilter filter=new FileNameExtensionFilter("*.csv", "csv");
+            fileChooser.setFileFilter(filter);
+
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String dateStamp = formatter.format(date);
+            fileChooser.setSelectedFile(new File("customer_"+dateStamp));
+
+            int userSelection  = fileChooser.showSaveDialog(btnExportCsv);
+            if (userSelection == JFileChooser.APPROVE_OPTION){
+                File fileToSave = fileChooser.getSelectedFile();
+                try{
+                    FileWriter fileWriter = new FileWriter(fileToSave);
+                    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                    bufferedWriter.write("customerID,firstName,lastName,mobile,email,address,gender,DOB_Y,DOB_M,DOB_D");
+                    bufferedWriter.newLine();
+                    for (int i = 0; i < data.length; i++){
+                        for (int j = 0; j < 10; j++){
+                            if(j != 9){
+                                bufferedWriter.write(data[i][j] + ",");
+                            }else{
+                                bufferedWriter.write(data[i][j] + "");
                             }
-                            bufferedWriter.newLine();
                         }
-                        JOptionPane.showMessageDialog(btnExportCsv, "SUCCESSFULLY SAVED","INFORMATION",JOptionPane.INFORMATION_MESSAGE);
-                        bufferedWriter.close();
-                        fileWriter.close();
-                    } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(btnExportCsv, "ERROR","ERROR MESSAGE",JOptionPane.ERROR_MESSAGE);
+                        bufferedWriter.newLine();
                     }
+                    JOptionPane.showMessageDialog(btnExportCsv, "SUCCESSFULLY SAVED","INFORMATION",JOptionPane.INFORMATION_MESSAGE);
+                    bufferedWriter.close();
+                    fileWriter.close();
+                    if (!fileToSave.getName().endsWith(".csv")) {
+                        fileToSave=new File(fileToSave.getPath()+".csv");
+                        System.out.println(fileToSave.getPath());
+                    }
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(btnExportCsv, "ERROR","ERROR MESSAGE",JOptionPane.ERROR_MESSAGE);
                 }
-            });
+            }
+        });
         scpCustomer = new JScrollPane(tbCustomer);
         scpCustomer.setBounds(10,40,700,500);
         tbCustomer.setFillsViewportHeight(true);
