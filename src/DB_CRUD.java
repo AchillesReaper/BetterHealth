@@ -270,6 +270,36 @@ public class DB_CRUD {
         }
     }
 
+    public static void updateTransaction(Transaction transaction){
+        try{
+            Connection connection = DriverManager.getConnection(URL,USER,PASSWORD);
+            PreparedStatement pst = connection.prepareStatement(
+                    "UPDATE transactions SET year = ?, month = ?, day = ?, customerID = ?, serviceID = ?, price = ?, cardUsed = ?, cardCover = ?, cashPmt = ? WHERE (`transactionID` = ?)");
+            pst.setString(1, transaction.dateY);
+            pst.setString(2, transaction.dateM);
+            pst.setString(3, transaction.dateD);
+            pst.setString(4, transaction.customerID);
+            pst.setString(5, transaction.serviceID);
+            pst.setString(6, transaction.totalPrice);
+            pst.setString(7, transaction.cardUsed);
+            pst.setString(8, transaction.cardCover);
+            pst.setString(9, transaction.cashPayment);
+            pst.setString(10, transaction.id);
+
+
+            pst.executeUpdate();
+
+            pst.close();
+            connection.close();
+
+            JOptionPane.showMessageDialog(null, "This transaction is updated","Note",JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "This transaction  CANNOT be updated. \nPlease contact your developer","Error",JOptionPane.INFORMATION_MESSAGE);
+//            throw new RuntimeException(e);
+        }
+    }
+
     public static Object[][] searchTransaction(String queryString){
         try{
             Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
