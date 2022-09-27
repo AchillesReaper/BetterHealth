@@ -397,6 +397,31 @@ public class SectionTransaction extends JPanel {
         pnlDetail.setBounds(730,0,350,550);
 
         JLabel lbTrscDetail = new JLabel();
+//############################ btnUpdateTrsc ############################
+        JButton btnUpdateTransaction = new JButton();
+        if (transactionID.length() == 0){
+            lbTrscDetail.setText("Transaction Detail");
+            btnUpdateTransaction.setText("Update Transaction");
+        }else{
+            lbTrscDetail.setText("Transaction Detail: ID = "+transactionID);
+            btnUpdateTransaction.setText("Update Transaction ID = "+transactionID);
+        }
+        btnUpdateTransaction.setBackground(Color.red);
+        btnUpdateTransaction.setBounds(45,450,200,30);
+        btnUpdateTransaction.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnUpdateTransaction.addActionListener(e ->{
+            if (transactionID.length() == 0){
+                JOptionPane.showMessageDialog(null,"Please select a customer","Reminder",JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                int input = JOptionPane.showConfirmDialog(null,"Confirm update transaction (ID = "+transactionID+")?");
+                if (input == 0){
+                    new Pop_editTrsc(transactionID);
+                }
+            }
+        });
+//############################ btnUpdateTrsc ############################
+
+//############################ btnDeleteTrsc ############################
         JButton btnDeleteTransaction = new JButton();
         if (transactionID.length() == 0){
             lbTrscDetail.setText("Transaction Detail");
@@ -406,10 +431,9 @@ public class SectionTransaction extends JPanel {
             btnDeleteTransaction.setText("Delete Transaction ID = "+transactionID);
         }
         btnDeleteTransaction.setBackground(Color.red);
-        btnDeleteTransaction.setBounds(45,450,200,30);
+        btnDeleteTransaction.setBounds(45,500,200,30);
         btnDeleteTransaction.setHorizontalTextPosition(SwingConstants.CENTER);
         btnDeleteTransaction.addActionListener(e ->{
-
             if (transactionID.length() == 0){
                 JOptionPane.showMessageDialog(null,"Please select a customer","Reminder",JOptionPane.INFORMATION_MESSAGE);
             } else {
@@ -420,6 +444,7 @@ public class SectionTransaction extends JPanel {
                 }
             }
         });
+//############################ btnDeleteTrsc ############################
 
         lbTrscDetail.setFont(new Font("SansSerif", Font.BOLD, 14));
         lbTrscDetail.setBounds(10,5,200,30);
@@ -461,8 +486,6 @@ public class SectionTransaction extends JPanel {
         tfMediCardUsed.setEditable(false);
         tfCoveredAmount.setEditable(false);
         tfCashPaid.setEditable(false);
-
-
 
 
         lbDate.setBounds(10,40,120,30);
@@ -518,6 +541,7 @@ public class SectionTransaction extends JPanel {
         pnlDetail.add(tfMediCardUsed);
         pnlDetail.add(tfCoveredAmount);
         pnlDetail.add(tfCashPaid);
+        pnlDetail.add(btnUpdateTransaction);
         pnlDetail.add(btnDeleteTransaction);
 
 
