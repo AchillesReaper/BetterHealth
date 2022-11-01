@@ -150,6 +150,7 @@ public class Pop_Card {
         String[] tableTitle = {"Customer ID", "Card ID", "Issuer"};
         Object[][] data = DB_CRUD.searchCard(queryString);
         if (data.length == 0){
+            String card_id = "cash - " + customerID;
             mediCard = new MediCard(customerID,"cash", "CASH");
             DB_CRUD.addCardToDB(mediCard);
             data = DB_CRUD.searchCard(queryString);
