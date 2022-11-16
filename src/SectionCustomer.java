@@ -276,7 +276,7 @@ public class SectionCustomer extends JPanel{
             Date date = new Date();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             String dateStamp = formatter.format(date);
-            fileChooser.setSelectedFile(new File("customer_"+dateStamp));
+            fileChooser.setSelectedFile(new File("customer_"+dateStamp+".csv"));
 
             int userSelection  = fileChooser.showSaveDialog(btnExportCsv);
             if (userSelection == JFileChooser.APPROVE_OPTION){

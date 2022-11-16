@@ -344,7 +344,7 @@ public class SectionTransaction extends JPanel {
             Date date = new Date();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             String dateStamp = formatter.format(date);
-            fileChooser.setSelectedFile(new File("transaction_"+dateStamp));
+            fileChooser.setSelectedFile(new File("transaction_"+dateStamp+".csv"));
 
             int userSelection  = fileChooser.showSaveDialog(exportCsvBtn);
             if (userSelection == JFileChooser.APPROVE_OPTION){
