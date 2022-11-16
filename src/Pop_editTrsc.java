@@ -272,15 +272,19 @@ public class Pop_editTrsc {
         JTextField tfMediCardUsed = new JTextField(cardID+"",6);
         JTextField tfCoveredAmount = new JTextField(cardCover+"",6);
         JTextField tfCashPaid = new JTextField();
-        try{
-            int price = Integer.parseInt(servicePrice);
-            int coverAmt = Integer.parseInt(cardCover);
-            int cashPmt = price - coverAmt;
-            cashPayment = String.valueOf(cashPmt);
-            tfCashPaid.setText(cashPayment);
-        } catch (NumberFormatException e) {
-            System.out.println("Service or card not yet selected");
-        }
+        tfCoveredAmount.addActionListener(c -> {
+            try{
+                int price = Integer.parseInt(servicePrice);
+                cardCover = tfCoveredAmount.getText();
+                int coverAmt = Integer.parseInt(cardCover);
+                int cashPmt = price - coverAmt;
+                cashPayment = String.valueOf(cashPmt);
+                tfCashPaid.setText(cashPayment);
+            } catch (NumberFormatException e) {
+                System.out.println("Service or card not yet selected");
+            }
+        });
+
 
         tfDate.setEditable(false);
         tfCustomerID.setEditable(false);
@@ -291,7 +295,7 @@ public class Pop_editTrsc {
         tfServicePrice.setEditable(false);
         tfMediCardUsed.setEditable(false);
         tfCoveredAmount.setEditable(true);
-        tfCashPaid.setEditable(false);
+        tfCashPaid.setEditable(true);
 
         JButton btnUpdateTransaction = new JButton("Update Transaction");
         JButton btnClearForm = new JButton("Cancel");
@@ -300,18 +304,20 @@ public class Pop_editTrsc {
         btnUpdateTransaction.addActionListener(e -> {
             int input = JOptionPane.showConfirmDialog(null,"Confirm update transaction (ID = "+transactionID+")?");
             if (input == 0) {
+                cardCover = tfCoveredAmount.getText();
+                cashPayment = tfCashPaid.getText();
                 Transaction transaction = new Transaction(dateY, dateM, dateD, customerID, serviceID, servicePrice, cardID, cardCover, cashPayment);
                 transaction.setTransactionID(transactionID);
-                System.out.println(transaction.id);
-                System.out.println(transaction.dateY);
-                System.out.println(transaction.dateM);
-                System.out.println(transaction.dateD);
-                System.out.println(transaction.customerID);
-                System.out.println(transaction.serviceID);
-                System.out.println(transaction.totalPrice);
-                System.out.println(transaction.cardUsed);
-                System.out.println(transaction.cardCover);
-                System.out.println(transaction.cashPayment);
+//                System.out.println(transaction.id);
+//                System.out.println(transaction.dateY);
+//                System.out.println(transaction.dateM);
+//                System.out.println(transaction.dateD);
+//                System.out.println(transaction.customerID);
+//                System.out.println(transaction.serviceID);
+//                System.out.println(transaction.totalPrice);
+//                System.out.println(transaction.cardUsed);
+//                System.out.println(transaction.cardCover);
+//                System.out.println(transaction.cashPayment);
                 if (inputValidation(transaction)) {
                     DB_CRUD.updateTransaction(transaction);
                     JPanel sectionPanel = new SectionTransaction("");
@@ -393,6 +399,13 @@ public class Pop_editTrsc {
             inputValid = false;
         }
 
+        int price = Integer.parseInt(transaction.totalPrice);
+        int covered = Integer.parseInt(transaction.cardCover);
+        int cashPTM = Integer.parseInt(transaction.cashPayment);
+        if (price != covered + cashPTM){
+            JOptionPane.showMessageDialog(frame,"Please check the payment methods","Input Error", JOptionPane.ERROR_MESSAGE);
+            inputValid = false;
+        }
         return inputValid;
     }
 

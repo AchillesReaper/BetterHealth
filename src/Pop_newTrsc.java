@@ -1,4 +1,5 @@
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -266,16 +267,20 @@ public class Pop_newTrsc {
         JTextField tfMediCardUsed = new JTextField(cardID+"",6);
         JTextField tfCoveredAmount = new JTextField(cardCover+"",6);
         JTextField tfCashPaid = new JTextField();
-        try{
-            int price = Integer.parseInt(servicePrice);
-            int coverAmt = Integer.parseInt(cardCover);
-            int cashPmt = price - coverAmt;
-            cashPayment = String.valueOf(cashPmt);
-            tfCashPaid.setText(cashPayment);
-        } catch (NumberFormatException e) {
-            System.out.println("Service or card not yet selected");
-//            throw new RuntimeException(e);
-        }
+        tfCoveredAmount.addActionListener(c -> {
+            try{
+                int price = Integer.parseInt(servicePrice);
+                cardCover = tfCoveredAmount.getText();
+                int coverAmt = Integer.parseInt(cardCover);
+                int cashPmt = price - coverAmt;
+                cashPayment = String.valueOf(cashPmt);
+                tfCashPaid.setText(cashPayment);
+            } catch (NumberFormatException e) {
+                System.out.println("Service or card not yet selected");
+            }
+        });
+
+
 
         tfDate.setEditable(false);
         tfCustomerID.setEditable(false);
@@ -286,12 +291,14 @@ public class Pop_newTrsc {
         tfServicePrice.setEditable(false);
         tfMediCardUsed.setEditable(false);
         tfCoveredAmount.setEditable(true);
-        tfCashPaid.setEditable(false);
+        tfCashPaid.setEditable(true);
 
         JButton btnAddTransaction = new JButton("Add Transaction");
         JButton btnClearForm = new JButton("Clear Form");
 
         btnAddTransaction.addActionListener(e -> {
+            cardCover = tfCoveredAmount.getText();
+            cashPayment = tfCashPaid.getText();
             Transaction transaction = new Transaction(dateY,dateM,dateD,customerID,serviceID,servicePrice,cardID,cardCover,cashPayment);
             if (inputValidation(transaction)){
                 DB_CRUD.addTransaction(transaction);
@@ -356,8 +363,12 @@ public class Pop_newTrsc {
         pnlPreview.add(btnAddTransaction);
         pnlPreview.add(btnClearForm);
 
+
+
         frame.add(pnlPreview);
         frame.setVisible(true);
+
+
     }
     public boolean inputValidation(Transaction transaction){
         boolean inputValid = true;
@@ -371,6 +382,14 @@ public class Pop_newTrsc {
         }
         if (cardID.length() == 0){
             JOptionPane.showMessageDialog(frame,"Please select a medi-card","Input Error", JOptionPane.ERROR_MESSAGE);
+            inputValid = false;
+        }
+
+        int price = Integer.parseInt(transaction.totalPrice);
+        int covered = Integer.parseInt(transaction.cardCover);
+        int cashPTM = Integer.parseInt(transaction.cashPayment);
+        if (price != covered + cashPTM){
+            JOptionPane.showMessageDialog(frame,"Please check the payment methods","Input Error", JOptionPane.ERROR_MESSAGE);
             inputValid = false;
         }
 

@@ -401,19 +401,19 @@ public class SectionTransaction extends JPanel {
         JButton btnUpdateTransaction = new JButton();
         if (transactionID.length() == 0){
             lbTrscDetail.setText("Transaction Detail");
-            btnUpdateTransaction.setText("Update Transaction");
+            btnUpdateTransaction.setText("Edit Transaction");
         }else{
             lbTrscDetail.setText("Transaction Detail: ID = "+transactionID);
-            btnUpdateTransaction.setText("Update Transaction ID = "+transactionID);
+            btnUpdateTransaction.setText("Edit Transaction ID = "+transactionID);
         }
         btnUpdateTransaction.setBackground(Color.red);
         btnUpdateTransaction.setBounds(45,450,200,30);
         btnUpdateTransaction.setHorizontalTextPosition(SwingConstants.CENTER);
         btnUpdateTransaction.addActionListener(e ->{
             if (transactionID.length() == 0){
-                JOptionPane.showMessageDialog(null,"Please select a customer","Reminder",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null,"Please select a transaction","Reminder",JOptionPane.INFORMATION_MESSAGE);
             } else {
-                int input = JOptionPane.showConfirmDialog(null,"Confirm update transaction (ID = "+transactionID+")?");
+                int input = JOptionPane.showConfirmDialog(null,"Confirm edit transaction (ID = "+transactionID+")?");
                 if (input == 0){
                     new Pop_editTrsc(transactionID);
                 }
@@ -435,7 +435,7 @@ public class SectionTransaction extends JPanel {
         btnDeleteTransaction.setHorizontalTextPosition(SwingConstants.CENTER);
         btnDeleteTransaction.addActionListener(e ->{
             if (transactionID.length() == 0){
-                JOptionPane.showMessageDialog(null,"Please select a customer","Reminder",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null,"Please select a transaction","Reminder",JOptionPane.INFORMATION_MESSAGE);
             } else {
                 int input = JOptionPane.showConfirmDialog(null,"Confirm delete transaction (ID = "+transactionID+")?");
                 if (input == 0){
