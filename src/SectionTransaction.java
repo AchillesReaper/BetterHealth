@@ -312,6 +312,9 @@ public class SectionTransaction extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 int row = tbTransaction.getSelectedRow();
+                if (row == -1) {
+                    return;
+                }
                 transactionID = tbTransaction.getModel().getValueAt(row,0).toString();
                 dateY = tbTransaction.getModel().getValueAt(row,1).toString();
                 dateM = tbTransaction.getModel().getValueAt(row,2).toString();

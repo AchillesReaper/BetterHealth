@@ -175,6 +175,9 @@ public class Pop_newTrsc {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 int row = tbExtService.getSelectedRow();
+                if (row == -1) {
+                    return;
+                }
                 serviceID = tbExtService.getModel().getValueAt(row, 0).toString();
                 serviceName = tbExtService.getModel().getValueAt(row, 1).toString();
                 serviceContent = tbExtService.getModel().getValueAt(row, 2).toString();
@@ -218,6 +221,9 @@ public class Pop_newTrsc {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 int row = tbCard.getSelectedRow();
+                if (row == -1) {
+                    return;
+                }
                 cardID = tbCard.getModel().getValueAt(row,1).toString();
                 constPreviewPanel();
             }

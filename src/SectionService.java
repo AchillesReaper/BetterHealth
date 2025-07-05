@@ -51,6 +51,9 @@ public class SectionService extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 int row = tbExtService.getSelectedRow();
+                if (row == -1) {
+                    return;
+                }
                 tfServiceID.setText((tbExtService.getModel().getValueAt(row, 0)).toString());
                 tfServiceName.setText((tbExtService.getModel().getValueAt(row, 1)).toString());
                 tfServiceContent.setText((tbExtService.getModel().getValueAt(row, 2)).toString());
@@ -95,6 +98,9 @@ public class SectionService extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 int row = tbExtService.getSelectedRow();
+                if (row == -1) {
+                    return;
+                }
                 tfServiceID.setText((tbExtService.getModel().getValueAt(row, 0)).toString());
                 tfServiceName.setText((tbExtService.getModel().getValueAt(row, 1)).toString());
                 tfServiceContent.setText((tbExtService.getModel().getValueAt(row, 2)).toString());

@@ -252,6 +252,9 @@ public class SectionCustomer extends JPanel{
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 int row = tbCustomer.getSelectedRow();
+                if (row == -1) {
+                    return;
+                }
                 tfCustomerID.setText((tbCustomer.getModel().getValueAt(row,0)).toString());
                 tfFirstName.setText((tbCustomer.getModel().getValueAt(row,1)).toString());
                 tfLastName.setText((tbCustomer.getModel().getValueAt(row,2)).toString());

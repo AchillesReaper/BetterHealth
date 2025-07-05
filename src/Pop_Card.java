@@ -167,6 +167,9 @@ public class Pop_Card {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 int row = tbCard.getSelectedRow();
+                if (row == -1) {
+                    return;
+                }
 //                String customerID = (tbCard.getModel().getValueAt(row,0)).toString();
                 tfCardID.setText((tbCard.getModel().getValueAt(row,1)).toString());
                 tfIssuer.setText((tbCard.getModel().getValueAt(row,2)).toString());
